@@ -11,8 +11,9 @@ export default function FakeCallScreen({ onHangUp }: FakeCallScreenProps) {
         <CallScreen
             onHangUp={onHangUp}
             callerName="Mom"
-            callerSubtext="iPhone"
+            callerSubtext="Samsung Galaxy S25+ 5G"
             callerInitial="M"
+            callerAvatar="/contacts/mom.png"
             autoAnswer={false}
         />
     );
