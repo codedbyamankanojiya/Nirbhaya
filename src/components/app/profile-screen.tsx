@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getPlaceholderImage } from '@/lib/placeholder-images';
 import { User, Shield, HeartPulse, Phone, Users, Settings, Globe, Moon, Sun } from 'lucide-react';
-import React from 'react';
+import React, { useState } from 'react';
 import { useTheme } from 'next-themes';
 import { Switch } from '../ui/switch';
 import { Button } from '@/components/ui/button';
@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/select"
 import { useToast } from '@/hooks/use-toast';
 import AppHeader from './app-header';
+import CallScreen from './call-screen';
 
 
 const contacts = [
@@ -51,17 +52,30 @@ export default function ProfileScreen({ onBack }: { onBack: () => void }) {
     const userAvatar = getPlaceholderImage('user-avatar');
     const { theme, setTheme } = useTheme();
     const { toast } = useToast();
+    const [activeCall, setActiveCall] = useState<{ name: string; avatar: string; initial: string } | null>(null);
 
-    const handleCallFriend = (contactName: string) => {
-        toast({
-            title: `Calling ${contactName}...`,
-            description: "Opening dialer to call your trusted contact.",
-            duration: 3000,
+    const handleCallFriend = (contact: typeof contacts[0]) => {
+        const avatar = getPlaceholderImage(contact.avatarId);
+        setActiveCall({
+            name: contact.name,
+            avatar: avatar?.imageUrl || '',
+            initial: contact.name.charAt(0)
         });
     };
 
     return (
         <div className="h-full bg-background flex flex-col">
+            {activeCall && (
+                <CallScreen
+                    onHangUp={() => setActiveCall(null)}
+                    callerName={activeCall.name}
+                    callerSubtext="Samsung Galaxy S25+ 5G"
+                    callerInitial={activeCall.initial}
+                    callerAvatar={activeCall.avatar}
+                    autoAnswer={false}
+                    callType="outgoing"
+                />
+            )}
             <AppHeader title="My Profile" onBack={onBack} showBackButton={true} icon={User} />
             <div className="flex-grow p-4 space-y-6 overflow-y-auto">
                 <div className="flex items-center space-x-4">
@@ -156,7 +170,7 @@ export default function ProfileScreen({ onBack }: { onBack: () => void }) {
                                             <p className="font-semibold">{contact.name}</p>
                                             <p className="text-sm text-muted-foreground">{contact.relation}</p>
                                         </div>
-                                        <Button variant="ghost" size="icon" onClick={() => handleCallFriend(contact.name)}>
+                                        <Button variant="ghost" size="icon" onClick={() => handleCallFriend(contact)}>
                                             <Phone className="w-5 h-5 text-primary" />
                                         </Button>
                                     </div>

@@ -2,9 +2,9 @@
     "placeholderImages": [
         {
             "id": "user-avatar",
-            "description": "User's profile picture.",
-            "imageUrl": "https://images.unsplash.com/photo-1610655507808-a59293f4e332?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHx3b21hbiUyMHBvcnRyYWl0fGVufDB8fHx8MTc2NTQzNjIwMHww&ixlib=rb-4.1.0&q=80&w=1080",
-            "imageHint": "woman portrait"
+            "description": "Priya's profile picture.",
+            "imageUrl": "/contacts/priya.png",
+            "imageHint": "Priya Sharma"
         },
         {
             "id": "guardian-0",

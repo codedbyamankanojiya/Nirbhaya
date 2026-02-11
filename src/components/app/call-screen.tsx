@@ -11,6 +11,7 @@ interface CallScreenProps {
     callerInitial?: string;
     callerAvatar?: string;
     autoAnswer?: boolean;
+    callType?: 'incoming' | 'outgoing';
 }
 
 export default function CallScreen({
@@ -19,7 +20,8 @@ export default function CallScreen({
     callerSubtext = "iPhone",
     callerInitial = "M",
     callerAvatar,
-    autoAnswer = false
+    autoAnswer = false,
+    callType = 'incoming'
 }: CallScreenProps) {
     const [callStatus, setCallStatus] = useState<'ringing' | 'active'>(autoAnswer ? 'active' : 'ringing');
     const [timer, setTimer] = useState(0);
@@ -58,10 +60,10 @@ export default function CallScreen({
             <div className="flex flex-col items-center">
                 {callStatus === 'ringing' && (
                     <div className="flex flex-col items-center gap-2 animate-pulse">
-                        <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center">
-                            <Phone className="w-8 h-8 text-green-400" />
+                        <div className={`w-16 h-16 rounded-full ${callType === 'outgoing' ? 'bg-blue-500/20' : 'bg-green-500/20'} flex items-center justify-center`}>
+                            <Phone className={`w-8 h-8 ${callType === 'outgoing' ? 'text-blue-400' : 'text-green-400'}`} />
                         </div>
-                        <p className="text-lg text-gray-300">Incoming Call...</p>
+                        <p className="text-lg text-gray-300">{callType === 'outgoing' ? 'Calling...' : 'Incoming Call...'}</p>
                     </div>
                 )}
                 {callStatus === 'active' && (
@@ -74,7 +76,7 @@ export default function CallScreen({
 
             {/* Bottom Section - Action Buttons */}
             <div className="w-full flex justify-around items-center mb-12">
-                {callStatus === 'ringing' && (
+                {callStatus === 'ringing' && callType === 'incoming' && (
                     <button
                         onClick={() => setCallStatus('active')}
                         className="flex flex-col items-center gap-3 active:scale-95 transition-transform"
