@@ -10,7 +10,7 @@ export function AppShell({ children, className }: { children: ReactNode; classNa
                 <div className="w-16 h-1.5 bg-gray-700 rounded-full"></div>
             </div>
 
-            <div className={cn("flex-grow flex flex-col overflow-hidden relative bg-card", className)}>
+            <div id="app-shell-container" className={cn("flex-grow flex flex-col overflow-hidden relative bg-card", className)}>
                 {children}
             </div>
 
