@@ -31,7 +31,7 @@ const navItems = [
   { id: "ai", icon: Sparkles, label: "Assistant" },
   { id: "tracking", icon: Users, label: "Tracking" },
   { id: "resources", icon: BookOpen, label: "Resources" },
-] as const;
+];
 
 interface ScreenWrapperProps {
   id: ScreenId;
@@ -98,7 +98,6 @@ export default function Home() {
                   navItems={navItems}
                   onProfileClick={() => setActiveScreen('profile')}
                 />
-                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-neutral-600 rounded-full opacity-80 group-hover:opacity-100 transition-opacity z-20"></div>
               </div>
             </>
           )}

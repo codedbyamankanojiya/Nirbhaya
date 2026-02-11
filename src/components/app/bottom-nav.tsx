@@ -14,13 +14,13 @@ type NavItem = {
 interface BottomNavProps {
     activeScreen: ScreenId;
     setActiveScreen: (screen: ScreenId) => void;
-    navItems: readonly Omit<NavItem, 'id'> & { id: string }[];
+    navItems: (Omit<NavItem, 'id'> & { id: string })[];
     onProfileClick: () => void;
 }
 
 export function BottomNav({ activeScreen, setActiveScreen, navItems, onProfileClick }: BottomNavProps) {
     return (
-        <div className="h-20 bg-background/80 backdrop-blur-sm border-t">
+        <div className="h-20 bg-background/80 backdrop-blur-sm border-t pb-4">
             <nav className="w-full h-full">
                 <div className="flex justify-around items-center h-full px-2 relative">
                     {navItems.map((item) => (
