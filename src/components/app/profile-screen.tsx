@@ -24,6 +24,7 @@ const contacts = [
     { id: '1', name: 'Mom', relation: 'Family', avatarId: 'guardian-2' },
     { id: '2', name: 'Dad', relation: 'Family', avatarId: 'guardian-3' },
     { id: '3', name: 'Aman Kanojiya', relation: 'Friend', avatarId: 'guardian-4' },
+    { id: '4', name: 'Brother', relation: 'Family', avatarId: 'guardian-5' },
 ];
 
 const guardians = [
