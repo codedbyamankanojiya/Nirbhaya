@@ -75,7 +75,7 @@ export default function Home() {
         defaultTheme="dark"
         enableSystem
         disableTransitionOnChange
-        storageKey="guardian-angel-theme"
+        storageKey="nirbhaya-theme"
       >
         <AppShell>
           {showFakeCall ? (
