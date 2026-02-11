@@ -21,6 +21,7 @@ import AppHeader from './app-header';
 
 
 const contacts = [
+    { id: '0', name: 'Police', relation: 'Emergency', avatarId: 'guardian-0' },
     { id: '1', name: 'Mom', relation: 'Family', avatarId: 'guardian-2' },
     { id: '2', name: 'Dad', relation: 'Family', avatarId: 'guardian-3' },
     { id: '3', name: 'Aman Kanojiya', relation: 'Friend', avatarId: 'guardian-4' },

@@ -7,6 +7,12 @@
             "imageHint": "woman portrait"
         },
         {
+            "id": "guardian-0",
+            "description": "Police emergency contact",
+            "imageUrl": "/contacts/police.png",
+            "imageHint": "Police"
+        },
+        {
             "id": "guardian-1",
             "description": "Aisha Khan profile picture",
             "imageUrl": "/contacts/aisha.png",
