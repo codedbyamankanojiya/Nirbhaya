@@ -87,7 +87,7 @@ export default function ProfileScreen({ onBack }: { onBack: () => void }) {
                     </Avatar>
                     <div>
                         <h2 className="text-2xl font-bold">Priya Sharma</h2>
-                        <p className="text-muted-foreground">priya.s@email.com</p>
+                        <p className="text-muted-foreground">priyasharma2005@gmail.com</p>
                     </div>
                 </div>
 

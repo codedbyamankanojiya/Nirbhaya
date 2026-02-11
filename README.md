@@ -434,7 +434,7 @@ For support, questions, or feedback:
 
 <div align="center">
 
-**Made with ❤️ for Women's Safety**
+**Made with ❤️ for Womens (Our Beloved Mothers & Sisters)**
 
 ⭐ Star this repository if you find it helpful!
 
