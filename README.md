@@ -36,11 +36,13 @@ To empower women with technology-driven safety tools that provide peace of mind,
 - Sends live location data to guardians
 - Confirmation dialog to prevent accidental activation
 
-### 📞 **Fake Call Feature**
-- Simulate incoming calls to de-escalate unsafe situations
-- Realistic call interface with customizable caller details
-- Quick-access from home screen
-- Discreet exit strategy tool
+### 📞 **Smart Call Interface**
+- **Fake Call Feature**: Simulate incoming calls to de-escalate unsafe situations
+- **Emergency Contact Calling**: Beautiful call interface for all contacts
+- **Realistic call screen** with contact photos and Samsung Galaxy S25+ 5G branding
+- **Outgoing/Incoming modes**: Different UI for calling vs receiving calls
+- **Quick-access** from home screen and profile
+- **Discreet exit strategy** tool
 
 ### 🗺️ **Community Safety Map**
 - **AI-generated crime heatmaps** showing high-risk areas
@@ -72,11 +74,17 @@ To empower women with technology-driven safety tools that provide peace of mind,
 - Educational content for awareness
 
 ### 👤 **User Profile & Settings**
-- Personalized user dashboard
-- Emergency contact management
-- Notification preferences
-- Theme customization (Dark/Light mode)
-- Privacy and security settings
+- **Personalized dashboard** with actual user photo (Priya Sharma)
+- **Emergency contact management** with real contact photos:
+  - Police (priority emergency contact)
+  - Family members (Mom, Dad, Brother)
+  - Friends (Aisha Khan, Aman Kanojiya)
+- **One-tap calling** with beautiful call interface
+- **Medical information** (blood type, allergies, conditions)
+- **Guardian management** for live location sharing
+- **Theme customization** (Dark/Light mode)
+- **Multi-language support** (English, Hindi, Tamil, Telugu, Gujarati)
+- **Privacy and security settings**
 
 ---
 
@@ -323,21 +331,34 @@ User Input → Screen Component → AI Flow (Server) → Genkit → Gemini AI �
 ## 🎨 Design Philosophy
 
 ### Mobile-First Approach
-- Optimized for mobile devices with responsive design
-- Smartphone shell simulation for authentic mobile experience
-- Touch-friendly interactions and gestures
+- **Samsung Galaxy S25 design**: Authentic smartphone shell with punch-hole camera
+- **Responsive design**: Optimized for mobile devices
+- **Adaptive layout**: Phone shell on desktop, full-screen on mobile
+- **Touch-friendly** interactions and gestures
+- **Modern aesthetics**: Thinner bezels, Samsung-style gesture bar
 
 ### Accessibility
 - WCAG 2.1 compliant components via Radix UI
 - Keyboard navigation support
 - Screen reader friendly
 - High contrast color schemes
+- Proper image alt texts and ARIA labels
 
 ### Visual Design
-- **Dark Mode**: Default theme for reduced eye strain
+- **Dark Mode**: Default theme for reduced eye strain and premium feel
 - **Glassmorphism**: Modern frosted glass effects
-- **Smooth Animations**: Delightful micro-interactions
-- **Color Psychology**: Red for emergency, calming blues for safety
+- **Smooth Animations**: 
+  - SOS pulse animation (scale 1.0 → 1.15)
+  - Accordion animations for expandable content
+  - Fade-in effects for screen transitions
+  - Call screen animations (pulse, glow effects)
+- **Color Psychology**: 
+  - Red for emergency (SOS, decline)
+  - Green for safety (accept call, safe zones)
+  - Blue for outgoing actions (calling)
+  - Lavender/purple accents for premium feel
+- **Custom Scrollbar**: Sleek, minimal design
+- **Inter Font Family**: Modern, readable typography
 
 ---
 
