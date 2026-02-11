@@ -168,7 +168,7 @@ button,
     -webkit-tap-highlight-color: transparent;
 }
 
-/* Mobile optimizations */
+/* Mobile optimizations - Samsung S25 style */
 @media (max-width: 640px) {
     .app-shell {
         max-width: 100%;
@@ -176,6 +176,11 @@ button,
         max-height: 100vh;
         border-radius: 0;
         border: none;
+    }
+
+    /* Hide punch-hole on real mobile devices */
+    .app-shell>div:first-child {
+        display: none;
     }
 }
 
