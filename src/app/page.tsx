@@ -69,7 +69,7 @@ export default function Home() {
   const isHomeScreen = activeScreen === 'home';
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-4 bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100">
+    <main className="flex min-h-screen w-full flex-col items-center justify-center p-0 lg:p-4 bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100">
       <ThemeProvider
         attribute="class"
         defaultTheme="dark"

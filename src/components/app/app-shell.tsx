@@ -21,17 +21,24 @@ export function AppShell({ children, className }: { children: ReactNode; classNa
     };
 
     return (
-        <div className="w-full max-w-[400px] mx-auto h-[800px] max-h-[90vh] bg-black rounded-[42px] shadow-2xl overflow-hidden border-[8px] border-neutral-900 flex flex-col relative group">
-            {/* Samsung S25 Punch-hole Camera */}
-            <div className="absolute top-3 left-1/2 -translate-x-1/2 w-3 h-3 bg-black rounded-full z-30 ring-2 ring-neutral-800"></div>
+        <div
+            className={cn(
+                "app-shell w-full mx-auto flex flex-col relative",
+                "min-h-screen h-screen max-h-[100dvh] lg:min-h-0 lg:h-[800px] lg:max-h-[90vh] lg:max-w-[400px]",
+                "bg-card overflow-hidden lg:bg-black",
+                "lg:rounded-[42px] lg:shadow-2xl lg:border-[8px] lg:border-neutral-900"
+            )}
+        >
+            {/* Samsung S25 Punch-hole Camera - desktop (PC) only */}
+            <div className="hidden lg:block absolute top-3 left-1/2 -translate-x-1/2 w-3 h-3 bg-black rounded-full z-30 ring-2 ring-neutral-800" aria-hidden />
 
             {/* Screen Container */}
             <div id="app-shell-container" className={cn("flex-grow flex flex-col overflow-hidden relative bg-card", className)}>
                 {children}
             </div>
 
-            {/* Android Navigation Bar - Transparent Overlay */}
-            <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-black/80 to-transparent flex items-center justify-around px-8 z-50 pointer-events-none">
+            {/* Android Navigation Bar - desktop (PC) only */}
+            <div className="hidden lg:flex absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-black/80 to-transparent items-center justify-around px-8 z-50 pointer-events-none">
                 {/* Back Button */}
                 <button
                     onClick={handleBack}

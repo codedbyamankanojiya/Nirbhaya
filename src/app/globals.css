@@ -168,19 +168,12 @@ button,
     -webkit-tap-highlight-color: transparent;
 }
 
-/* Mobile optimizations - Samsung S25 style */
-@media (max-width: 640px) {
+/* Tablet & mobile: show only inner app content (no phone frame). PC: full phone layout. */
+@media (max-width: 1023px) {
     .app-shell {
         max-width: 100%;
-        height: 100vh;
-        max-height: 100vh;
         border-radius: 0;
         border: none;
-    }
-
-    /* Hide punch-hole on real mobile devices */
-    .app-shell>div:first-child {
-        display: none;
     }
 }
 
