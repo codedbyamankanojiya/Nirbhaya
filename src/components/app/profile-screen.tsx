@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getPlaceholderImage } from '@/lib/placeholder-images';
 import { User, Shield, HeartPulse, Phone, Users, Settings, Globe, Moon, Sun } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
 import { Switch } from '../ui/switch';
 import { Button } from '@/components/ui/button';
@@ -53,6 +53,12 @@ export default function ProfileScreen({ onBack }: { onBack: () => void }) {
     const { theme, setTheme } = useTheme();
     const { toast } = useToast();
     const [activeCall, setActiveCall] = useState<{ name: string; avatar: string; initial: string } | null>(null);
+    const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(null);
+
+    useEffect(() => {
+        if (typeof document === "undefined") return;
+        setPortalContainer(document.getElementById("app-shell-container"));
+    }, []);
 
     const handleCallFriend = (contact: typeof contacts[0]) => {
         const avatar = getPlaceholderImage(contact.avatarId);
@@ -104,7 +110,7 @@ export default function ProfileScreen({ onBack }: { onBack: () => void }) {
                                 <SelectTrigger className="w-[180px]">
                                     <SelectValue placeholder="Language" />
                                 </SelectTrigger>
-                                <SelectContent>
+                                <SelectContent portalContainer={portalContainer} className="max-w-[260px]">
                                     <SelectItem value="en">English</SelectItem>
                                     <SelectItem value="hi">Hindi (हिन्दी)</SelectItem>
                                     <SelectItem value="mr">Marathi (मराठी)</SelectItem>
