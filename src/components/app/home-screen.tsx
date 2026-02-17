@@ -58,6 +58,7 @@ export default function HomeScreen({ onNavigate, onFakeCall, onBack, isHomeScree
     const [recordedUrl, setRecordedUrl] = useState<string | null>(null);
     const [recordError, setRecordError] = useState<string | null>(null);
     const [hasStream, setHasStream] = useState(false);
+    const [dialogPortalContainer, setDialogPortalContainer] = useState<HTMLElement | null>(null);
 
     const mediaRecorderSupported = useMemo(() => {
         return typeof window !== "undefined" && "MediaRecorder" in window;
@@ -260,21 +261,31 @@ export default function HomeScreen({ onNavigate, onFakeCall, onBack, isHomeScree
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    useEffect(() => {
+        if (typeof document === "undefined") return;
+        const el = document.getElementById("app-shell-container");
+        setDialogPortalContainer(el);
+    }, []);
+
 
     return (
         <div className="h-full flex flex-col app-gradient">
             <AppHeader title="Priya" showBackButton={!isHomeScreen} onBack={onBack} welcomeMessage="Welcome Back," />
 
             <Dialog open={isRecordDialogOpen} onOpenChange={setIsRecordDialogOpen}>
-                <DialogContent mobileFullScreen className="p-0 overflow-hidden sm:p-0">
-                    <div className="flex flex-col h-screen min-h-[100dvh] sm:h-auto sm:min-h-0">
+                <DialogContent
+                    portalContainer={dialogPortalContainer}
+                    mobileFullScreen
+                    className="p-0 overflow-hidden sm:p-0 sm:max-h-[90vh] sm:overflow-hidden"
+                >
+                    <div className="flex flex-col h-screen min-h-[100dvh] sm:h-auto sm:min-h-0 sm:max-h-[90vh] sm:overflow-hidden">
                         <div className="bg-black">
                             <video
                                 ref={previewVideoRef}
                                 playsInline
                                 muted
                                 autoPlay
-                                className="w-full h-[52dvh] max-h-[420px] object-cover sm:h-[52vh]"
+                                className="w-full h-[52dvh] max-h-[420px] object-cover sm:h-[42vh] sm:max-h-[360px]"
                             />
                         </div>
 
