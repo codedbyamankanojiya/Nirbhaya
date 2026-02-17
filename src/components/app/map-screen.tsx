@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import type { FC } from 'react';
-import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -21,7 +20,21 @@ export default function MapScreen({ onBack }: { onBack: () => void }) {
     const [loading, setLoading] = useState(false);
     const [mapData, setMapData] = useState<CrimeHotspotMapOutput | null>(null);
 
+    const buildDemoMapData = (loc: string, time: string): CrimeHotspotMapOutput => {
+        return {
+            crimeHeatmapData: `Demo heatmap for ${loc} (${time}). Highlighted zones are illustrative only.\n\n- Higher activity: main junctions, transit hubs, poorly lit stretches\n- Medium activity: market streets after peak hours\n- Lower activity: well-lit streets with CCTV/shops open`,
+            safeRouteSuggestions: `Demo suggestions for ${loc} (${time}):\n\n1) Prefer well-lit, main roads even if slightly longer.\n2) Avoid isolated shortcuts, empty parks/lanes, and poorly lit flyovers.\n3) Stay near open shops/petrol pumps; keep emergency dial ready.\n4) Share live location with a trusted contact for the duration of travel.\n5) If you feel unsafe, move to a populated place and call 112/181.`,
+        };
+    };
+
     const crimeMapImage = getPlaceholderImage('crime-heatmap');
+
+    const withTimeout = async <T,>(promise: Promise<T>, ms: number): Promise<T> => {
+        return await Promise.race([
+            promise,
+            new Promise<T>((_, reject) => setTimeout(() => reject(new Error("timeout")), ms)),
+        ]);
+    };
 
     const handleGenerateMap = async () => {
         if (!location) {
@@ -35,17 +48,20 @@ export default function MapScreen({ onBack }: { onBack: () => void }) {
         setLoading(true);
         setMapData(null);
         try {
-            const result = await generateCrimeHotspotMap({
+            const timeOfDay = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const result = await withTimeout(generateCrimeHotspotMap({
                 location,
-                timeOfDay: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-            });
+                timeOfDay,
+            }), 6000);
             setMapData(result);
         } catch (error) {
             toast({
                 title: 'Error generating map',
-                description: 'Could not get a response from the AI. Please try again.',
-                variant: 'destructive',
+                description: 'AI response unavailable. Showing demo map insights instead.',
+                duration: 3500,
             });
+            const timeOfDay = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            setMapData(buildDemoMapData(location, timeOfDay));
         } finally {
             setLoading(false);
         }
@@ -92,13 +108,11 @@ export default function MapScreen({ onBack }: { onBack: () => void }) {
                             </CardHeader>
                             <CardContent>
                                 {crimeMapImage && (
-                                    <Image
+                                    <img
                                         src={crimeMapImage.imageUrl}
                                         alt={crimeMapImage.description}
                                         data-ai-hint={crimeMapImage.imageHint}
-                                        width={800}
-                                        height={600}
-                                        className="rounded-lg border aspect-video object-cover"
+                                        className="rounded-lg border aspect-video object-cover w-full"
                                     />
                                 )}
                                 <p className="text-xs text-muted-foreground mt-2">{mapData.crimeHeatmapData}</p>
