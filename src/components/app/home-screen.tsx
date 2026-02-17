@@ -2,7 +2,7 @@
 "use client";
 
 import type { FC } from "react";
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
     AlertDialog,
@@ -14,6 +14,14 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { Phone, Video, Shield, Siren } from "lucide-react";
 import type { ScreenId } from "@/app/page";
@@ -40,6 +48,188 @@ export default function HomeScreen({ onNavigate, onFakeCall, onBack, isHomeScree
     const { toast } = useToast();
     const [isSosPressed, setIsSosPressed] = useState(false);
 
+    const [isRecordDialogOpen, setIsRecordDialogOpen] = useState(false);
+    const previewVideoRef = useRef<HTMLVideoElement | null>(null);
+    const streamRef = useRef<MediaStream | null>(null);
+    const recorderRef = useRef<MediaRecorder | null>(null);
+    const chunksRef = useRef<BlobPart[]>([]);
+    const [isInitializingCamera, setIsInitializingCamera] = useState(false);
+    const [isRecording, setIsRecording] = useState(false);
+    const [recordedUrl, setRecordedUrl] = useState<string | null>(null);
+    const [recordError, setRecordError] = useState<string | null>(null);
+    const [hasStream, setHasStream] = useState(false);
+
+    const mediaRecorderSupported = useMemo(() => {
+        return typeof window !== "undefined" && "MediaRecorder" in window;
+    }, []);
+
+    const stopStreamTracks = () => {
+        const stream = streamRef.current;
+        if (!stream) return;
+        for (const track of stream.getTracks()) {
+            try {
+                track.stop();
+            } catch {
+                // ignore
+            }
+        }
+        streamRef.current = null;
+        setHasStream(false);
+    };
+
+    const cleanupRecorder = () => {
+        recorderRef.current = null;
+        chunksRef.current = [];
+    };
+
+    const resetRecordingOutput = () => {
+        if (recordedUrl) {
+            URL.revokeObjectURL(recordedUrl);
+        }
+        setRecordedUrl(null);
+    };
+
+    const pickMimeType = () => {
+        const candidates = [
+            "video/webm;codecs=vp9,opus",
+            "video/webm;codecs=vp8,opus",
+            "video/webm",
+            "video/mp4",
+        ];
+        for (const type of candidates) {
+            try {
+                if (typeof MediaRecorder !== "undefined" && MediaRecorder.isTypeSupported(type)) return type;
+            } catch {
+                // ignore
+            }
+        }
+        return "";
+    };
+
+    const attachStreamToPreview = (stream: MediaStream) => {
+        const el = previewVideoRef.current;
+        if (!el) return;
+        try {
+            el.srcObject = stream;
+            void el.play();
+        } catch {
+            // ignore
+        }
+    };
+
+    const initCamera = async () => {
+        if (isInitializingCamera) return;
+        setIsInitializingCamera(true);
+        setRecordError(null);
+
+        try {
+            if (typeof window !== "undefined" && !window.isSecureContext) {
+                setRecordError("Camera access requires HTTPS (or localhost). Open the site over HTTPS and try again.");
+                return;
+            }
+            stopStreamTracks();
+            cleanupRecorder();
+
+            if (!navigator.mediaDevices?.getUserMedia) {
+                setRecordError("Camera is not available in this browser.");
+                return;
+            }
+
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: { ideal: "environment" } },
+                audio: true,
+            });
+            streamRef.current = stream;
+            setHasStream(true);
+            attachStreamToPreview(stream);
+        } catch (err: any) {
+            const message =
+                err?.name === "NotAllowedError"
+                    ? "Camera/Microphone permission was denied. Please allow access and try again."
+                    : err?.name === "NotFoundError"
+                        ? "No camera was found on this device."
+                        : "Unable to access camera/microphone.";
+            setRecordError(message);
+        } finally {
+            setIsInitializingCamera(false);
+        }
+    };
+
+    const startRecording = () => {
+        setRecordError(null);
+        resetRecordingOutput();
+
+        const stream = streamRef.current;
+        if (!stream) {
+            setRecordError("Camera is not started yet.");
+            return;
+        }
+        if (!mediaRecorderSupported) {
+            setRecordError("Video recording is not supported in this browser.");
+            return;
+        }
+
+        try {
+            const mimeType = pickMimeType();
+            const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+            recorderRef.current = recorder;
+            chunksRef.current = [];
+
+            recorder.ondataavailable = (e: BlobEvent) => {
+                if (e.data && e.data.size > 0) {
+                    chunksRef.current.push(e.data);
+                }
+            };
+
+            recorder.onstop = () => {
+                const chunks = chunksRef.current;
+                const blob = new Blob(chunks, { type: recorder.mimeType || "video/webm" });
+                const url = URL.createObjectURL(blob);
+                setRecordedUrl(url);
+                setIsRecording(false);
+                cleanupRecorder();
+            };
+
+            recorder.onerror = () => {
+                setRecordError("Recording error occurred.");
+                setIsRecording(false);
+            };
+
+            recorder.start();
+            setIsRecording(true);
+        } catch {
+            setRecordError("Unable to start recording.");
+        }
+    };
+
+    const stopRecording = () => {
+        const recorder = recorderRef.current;
+        if (!recorder) return;
+        try {
+            recorder.stop();
+        } catch {
+            setIsRecording(false);
+        }
+    };
+
+    const handleEvidenceCapture = async () => {
+        setIsRecordDialogOpen(true);
+        toast({
+            title: "Evidence Capture",
+            description: "Opening camera…",
+            duration: 2000,
+        });
+        await initCamera();
+    };
+
+    const handleFallbackFilePicked: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        resetRecordingOutput();
+        const url = URL.createObjectURL(file);
+        setRecordedUrl(url);
+    };
+
     const handleSos = () => {
         toast({
             title: "SOS Activated!",
@@ -49,18 +239,130 @@ export default function HomeScreen({ onNavigate, onFakeCall, onBack, isHomeScree
         });
     };
 
-    const handleEvidenceCapture = () => {
-        toast({
-            title: "Evidence Capture On",
-            description: "Silently recording audio and video.",
-            duration: 3000,
-        });
-    };
+    useEffect(() => {
+        if (!isRecordDialogOpen) {
+            setIsRecording(false);
+            setIsInitializingCamera(false);
+            setRecordError(null);
+            cleanupRecorder();
+            stopStreamTracks();
+            resetRecordingOutput();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isRecordDialogOpen]);
+
+    useEffect(() => {
+        return () => {
+            cleanupRecorder();
+            stopStreamTracks();
+            if (recordedUrl) URL.revokeObjectURL(recordedUrl);
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
 
     return (
         <div className="h-full flex flex-col app-gradient">
             <AppHeader title="Priya" showBackButton={!isHomeScreen} onBack={onBack} welcomeMessage="Welcome Back," />
+
+            <Dialog open={isRecordDialogOpen} onOpenChange={setIsRecordDialogOpen}>
+                <DialogContent className="w-[95vw] max-w-lg p-0 overflow-hidden">
+                    <div className="flex flex-col">
+                        <div className="bg-black">
+                            <video
+                                ref={previewVideoRef}
+                                playsInline
+                                muted
+                                autoPlay
+                                className="w-full h-[52vh] max-h-[420px] object-cover"
+                            />
+                        </div>
+
+                        <div className="p-4 space-y-3">
+                            <DialogHeader>
+                                <DialogTitle>Record Evidence</DialogTitle>
+                                <DialogDescription>
+                                    Grant camera/microphone access, then start recording.
+                                </DialogDescription>
+                            </DialogHeader>
+
+                            {recordError ? (
+                                <p className="text-sm text-destructive">{recordError}</p>
+                            ) : null}
+
+                            {!hasStream ? (
+                                <Button
+                                    onClick={initCamera}
+                                    disabled={isInitializingCamera}
+                                    className="w-full"
+                                >
+                                    {isInitializingCamera ? "Starting Camera…" : "Start Camera"}
+                                </Button>
+                            ) : null}
+
+                            {hasStream && mediaRecorderSupported ? (
+                                <div className="grid grid-cols-2 gap-3">
+                                    <Button
+                                        onClick={startRecording}
+                                        disabled={isRecording}
+                                        className="w-full"
+                                    >
+                                        Start
+                                    </Button>
+                                    <Button
+                                        onClick={stopRecording}
+                                        disabled={!isRecording}
+                                        variant="destructive"
+                                        className="w-full"
+                                    >
+                                        Stop
+                                    </Button>
+                                </div>
+                            ) : null}
+
+                            {!mediaRecorderSupported ? (
+                                <div className="space-y-2">
+                                    <p className="text-sm text-muted-foreground">
+                                        This browser does not support in-app recording. Use the fallback capture below.
+                                    </p>
+                                    <input
+                                        type="file"
+                                        accept="video/*"
+                                        capture="environment"
+                                        onChange={handleFallbackFilePicked}
+                                        className="block w-full text-sm"
+                                    />
+                                </div>
+                            ) : null}
+
+                            {recordedUrl ? (
+                                <div className="space-y-3">
+                                    <video controls playsInline src={recordedUrl} className="w-full rounded-md" />
+                                    <a
+                                        href={recordedUrl}
+                                        download={`evidence-${new Date().toISOString().replace(/[:.]/g, "-")}.webm`}
+                                        className="inline-flex w-full"
+                                    >
+                                        <Button className="w-full" variant="outline">
+                                            Download Video
+                                        </Button>
+                                    </a>
+                                </div>
+                            ) : null}
+
+                            <DialogFooter>
+                                <Button
+                                    variant="outline"
+                                    className="w-full"
+                                    onClick={() => setIsRecordDialogOpen(false)}
+                                >
+                                    Close
+                                </Button>
+                            </DialogFooter>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
 
             <div className="flex-grow flex flex-col justify-center items-center px-6 space-y-4">
                 <AlertDialog>
