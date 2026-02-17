@@ -107,9 +107,13 @@ export default function ProfileScreen({ onBack }: { onBack: () => void }) {
                                 <SelectContent>
                                     <SelectItem value="en">English</SelectItem>
                                     <SelectItem value="hi">Hindi (हिन्दी)</SelectItem>
+                                    <SelectItem value="mr">Marathi (मराठी)</SelectItem>
+                                    <SelectItem value="bn">Bengali (বাংলা)</SelectItem>
+                                    <SelectItem value="gu">Gujarati (ગુજરાતી)</SelectItem>
                                     <SelectItem value="ta">Tamil (தமிழ்)</SelectItem>
                                     <SelectItem value="te">Telugu (తెలుగు)</SelectItem>
-                                    <SelectItem value="gu">Gujarati (ગુજરાતી)</SelectItem>
+                                    <SelectItem value="kn">Kannada (ಕನ್ನಡ)</SelectItem>
+                                    <SelectItem value="ml">Malayalam (മലയാളം)</SelectItem>
                                 </SelectContent>
                             </Select>
                         </SettingsItem>
