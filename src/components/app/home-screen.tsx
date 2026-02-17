@@ -266,19 +266,19 @@ export default function HomeScreen({ onNavigate, onFakeCall, onBack, isHomeScree
             <AppHeader title="Priya" showBackButton={!isHomeScreen} onBack={onBack} welcomeMessage="Welcome Back," />
 
             <Dialog open={isRecordDialogOpen} onOpenChange={setIsRecordDialogOpen}>
-                <DialogContent className="w-[95vw] max-w-lg p-0 overflow-hidden">
-                    <div className="flex flex-col">
+                <DialogContent mobileFullScreen className="p-0 overflow-hidden sm:p-0">
+                    <div className="flex flex-col h-screen min-h-[100dvh] sm:h-auto sm:min-h-0">
                         <div className="bg-black">
                             <video
                                 ref={previewVideoRef}
                                 playsInline
                                 muted
                                 autoPlay
-                                className="w-full h-[52vh] max-h-[420px] object-cover"
+                                className="w-full h-[52dvh] max-h-[420px] object-cover sm:h-[52vh]"
                             />
                         </div>
 
-                        <div className="p-4 space-y-3">
+                        <div className="p-4 space-y-3 overflow-y-auto flex-1 min-h-0">
                             <DialogHeader>
                                 <DialogTitle>Record Evidence</DialogTitle>
                                 <DialogDescription>
