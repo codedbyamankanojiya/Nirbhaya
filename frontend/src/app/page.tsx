@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, type ReactNode, type FC } from "react";
+import { AuthProvider } from "@/context/auth-context";
 import { AppShell } from "@/components/app/app-shell";
 import { BottomNav } from "@/components/app/bottom-nav";
 import HomeScreen from "@/components/app/home-screen";
@@ -70,39 +71,41 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen w-full flex-col items-center justify-center p-0 lg:p-4 bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100">
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="dark"
-        enableSystem
-        disableTransitionOnChange
-        storageKey="nirbhaya-theme"
-      >
-        <AppShell>
-          {showFakeCall ? (
-            <FakeCallScreen onHangUp={() => setShowFakeCall(false)} />
-          ) : (
-            <>
-              <div className="flex-grow overflow-y-auto">
-                <ScreenWrapper
-                  id={activeScreen}
-                  onNavigate={handleNavigate}
-                  onFakeCall={() => setShowFakeCall(true)}
-                  onBack={handleBack}
-                  isHomeScreen={isHomeScreen}
-                />
-              </div>
-              <div className="relative">
-                <BottomNav
-                  activeScreen={activeScreen}
-                  setActiveScreen={setActiveScreen}
-                  navItems={navItems}
-                  onProfileClick={() => setActiveScreen('profile')}
-                />
-              </div>
-            </>
-          )}
-        </AppShell>
-      </ThemeProvider>
+      <AuthProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+          storageKey="nirbhaya-theme"
+        >
+          <AppShell>
+            {showFakeCall ? (
+              <FakeCallScreen onHangUp={() => setShowFakeCall(false)} />
+            ) : (
+              <>
+                <div className="flex-grow overflow-y-auto">
+                  <ScreenWrapper
+                    id={activeScreen}
+                    onNavigate={handleNavigate}
+                    onFakeCall={() => setShowFakeCall(true)}
+                    onBack={handleBack}
+                    isHomeScreen={isHomeScreen}
+                  />
+                </div>
+                <div className="relative">
+                  <BottomNav
+                    activeScreen={activeScreen}
+                    setActiveScreen={setActiveScreen}
+                    navItems={navItems}
+                    onProfileClick={() => setActiveScreen('profile')}
+                  />
+                </div>
+              </>
+            )}
+          </AppShell>
+        </ThemeProvider>
+      </AuthProvider>
     </main>
   );
 }

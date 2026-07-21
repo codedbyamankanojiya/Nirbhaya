@@ -4,8 +4,8 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { getPlaceholderImage } from '@/lib/placeholder-images';
-import { User, Shield, HeartPulse, Phone, Users, Settings, Globe, Moon, Sun } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import { User, Shield, HeartPulse, Phone, Users, Settings, Globe, Moon, Sun, LogIn, LogOut } from 'lucide-react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
 import { Switch } from '../ui/switch';
 import { Button } from '@/components/ui/button';
@@ -19,6 +19,9 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import AppHeader from './app-header';
 import CallScreen from './call-screen';
+import { useAuth } from '@/context/auth-context';
+import AuthModal from './auth-modal';
+import { api, type ContactData } from '@/lib/api';
 
 
 const contacts = [
@@ -52,21 +55,60 @@ export default function ProfileScreen({ onBack }: { onBack: () => void }) {
     const userAvatar = getPlaceholderImage('user-avatar');
     const { theme, setTheme } = useTheme();
     const { toast } = useToast();
+    const { user, isAuthenticated, isLoading: authLoading, logout } = useAuth();
     const [activeCall, setActiveCall] = useState<{ name: string; avatar: string; initial: string } | null>(null);
     const [portalContainer, setPortalContainer] = useState<HTMLElement | null>(null);
+    const [authModalOpen, setAuthModalOpen] = useState(false);
+    const [liveContacts, setLiveContacts] = useState<ContactData[]>([]);
+    const [contactsLoading, setContactsLoading] = useState(false);
 
     useEffect(() => {
         if (typeof document === "undefined") return;
         setPortalContainer(document.getElementById("app-shell-container"));
     }, []);
 
-    const handleCallFriend = (contact: typeof contacts[0]) => {
+    // Fetch contacts from API when authenticated
+    const fetchContacts = useCallback(async () => {
+        if (!isAuthenticated) return;
+        setContactsLoading(true);
+        try {
+            const res = await api.get<ContactData[] | { data: ContactData[] }>('/api/v1/contacts');
+            const list = Array.isArray(res.data) ? res.data : (res.data as any)?.data ?? [];
+            setLiveContacts(list);
+        } catch {
+            // Silently fall back to demo contacts
+        } finally {
+            setContactsLoading(false);
+        }
+    }, [isAuthenticated]);
+
+    useEffect(() => {
+        fetchContacts();
+    }, [fetchContacts]);
+
+    // Derive display name and email from auth context
+    const displayName = user?.profile?.name || 'Priya Sharma';
+    const displayEmail = user?.email || 'priyasharma2005@gmail.com';
+    const displayInitial = displayName.charAt(0).toUpperCase();
+
+    // Merge live contacts with demo contacts for display
+    const displayContacts = isAuthenticated && liveContacts.length > 0
+        ? liveContacts.map((c, i) => ({ id: c.id, name: c.name, relation: c.isPrimary ? 'Primary' : 'Contact', avatarId: `guardian-${i % 6}` }))
+        : contacts;
+
+    const handleCallFriend = (contact: { id: string; name: string; relation: string; avatarId: string }) => {
         const avatar = getPlaceholderImage(contact.avatarId);
         setActiveCall({
             name: contact.name,
             avatar: avatar?.imageUrl || '',
             initial: contact.name.charAt(0)
         });
+    };
+
+    const handleLogout = async () => {
+        await logout();
+        setLiveContacts([]);
+        toast({ title: 'Logged Out', description: 'You have been signed out.', duration: 3000 });
     };
 
     return (
@@ -82,6 +124,7 @@ export default function ProfileScreen({ onBack }: { onBack: () => void }) {
                     callType="outgoing"
                 />
             )}
+            <AuthModal open={authModalOpen} onOpenChange={setAuthModalOpen} />
             <AppHeader title="My Profile" onBack={onBack} showBackButton={true} icon={User} />
             <div className="flex-grow p-4 space-y-6 overflow-y-auto">
                 <div className="flex items-center space-x-4">
@@ -89,13 +132,30 @@ export default function ProfileScreen({ onBack }: { onBack: () => void }) {
                         {userAvatar && (
                             <AvatarImage src={userAvatar.imageUrl} alt={userAvatar.description} data-ai-hint={userAvatar.imageHint} />
                         )}
-                        <AvatarFallback>P</AvatarFallback>
+                        <AvatarFallback>{displayInitial}</AvatarFallback>
                     </Avatar>
-                    <div>
-                        <h2 className="text-2xl font-bold">Priya Sharma</h2>
-                        <p className="text-muted-foreground">priyasharma2005@gmail.com</p>
+                    <div className="flex-grow">
+                        <h2 className="text-2xl font-bold">{displayName}</h2>
+                        <p className="text-muted-foreground text-sm">{displayEmail}</p>
                     </div>
+                    {isAuthenticated ? (
+                        <Button variant="ghost" size="icon" onClick={handleLogout} title="Logout">
+                            <LogOut className="w-5 h-5 text-muted-foreground" />
+                        </Button>
+                    ) : (
+                        <Button variant="outline" size="sm" onClick={() => setAuthModalOpen(true)} className="gap-1.5">
+                            <LogIn className="w-4 h-4" /> Login
+                        </Button>
+                    )}
                 </div>
+                {!isAuthenticated && (
+                    <div className="rounded-lg border border-dashed border-primary/40 bg-primary/5 p-4 text-center space-y-2">
+                        <p className="text-sm text-muted-foreground">Sign in to sync your profile, contacts, and safety data with the cloud.</p>
+                        <Button size="sm" onClick={() => setAuthModalOpen(true)} className="gap-1.5">
+                            <LogIn className="w-4 h-4" /> Sign In / Register
+                        </Button>
+                    </div>
+                )}
 
                 <Card>
                     <CardHeader>
@@ -166,7 +226,7 @@ export default function ProfileScreen({ onBack }: { onBack: () => void }) {
                     </CardHeader>
                     <CardContent className="p-0">
                         <div className="divide-y">
-                            {contacts.map((contact) => {
+                            {displayContacts.map((contact) => {
                                 const avatar = getPlaceholderImage(contact.avatarId);
                                 return (
                                     <div key={contact.id} className="flex items-center space-x-4 px-6 py-4 hover:bg-muted/50 transition-colors">
