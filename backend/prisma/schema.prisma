@@ -1,0 +1,244 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum SOSStatus {
+  ACTIVE
+  RESOLVED
+  FALSE_ALARM
+}
+
+enum IncidentStatus {
+  PENDING
+  INVESTIGATING
+  RESOLVED
+  CLOSED
+}
+
+enum NotificationType {
+  EMERGENCY
+  INCIDENT
+  SECURITY
+  ACCOUNT
+  SYSTEM
+}
+
+enum AuditLogAction {
+  LOGIN
+  LOGOUT
+  PASSWORD_CHANGE
+  PROFILE_UPDATE
+  SOS_TRIGGER
+  INCIDENT_CREATE
+  ADMIN_ACTION
+}
+
+model User {
+  id                    String                 @id @default(uuid())
+  email                 String                 @unique
+  password              String
+  role                  Role                   @default(USER)
+  isEmailVerified       Boolean                @default(false)
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  deletedAt             DateTime?
+  profile               Profile?
+  emergencyContacts     EmergencyContact[]
+  sosRequests           SOS[]
+  incidents             Incident[]
+  uploadedMedia         UploadedMedia[]
+  notifications         Notification[]
+  sessions              Session[]
+  refreshTokens         RefreshToken[]
+  auditLogs             AuditLog[]
+  emailVerificationToken EmailVerificationToken?
+  passwordResetToken    PasswordResetToken?
+
+  @@index([email])
+  @@index([role])
+}
+
+model Profile {
+  id               String   @id @default(uuid())
+  userId           String   @unique
+  name             String
+  dob              DateTime?
+  gender           String?
+  bloodGroup       String?
+  emergencyEmail   String?
+  emergencyPhone   String?
+  address          String?
+  profileImageUrl  String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  deletedAt        DateTime?
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model EmergencyContact {
+  id          String   @id @default(uuid())
+  userId      String
+  name        String
+  phone       String
+  email       String?
+  priority    Int      @default(0)
+  isPrimary   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([priority])
+  @@unique([userId, phone])
+}
+
+model SOS {
+  id          String    @id @default(uuid())
+  userId      String
+  latitude    Decimal?
+  longitude   Decimal?
+  description String?
+  ipAddress   String?
+  userAgent   String?
+  status      SOSStatus @default(ACTIVE)
+  resolvedAt  DateTime?
+  resolvedBy  String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model Incident {
+  id             String         @id @default(uuid())
+  userId         String
+  title          String
+  description    String
+  category       String
+  latitude       Decimal?
+  longitude      Decimal?
+  isAnonymous    Boolean        @default(false)
+  status         IncidentStatus @default(PENDING)
+  adminNotes     String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  deletedAt      DateTime?
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  uploadedMedia  UploadedMedia[]
+}
+
+model UploadedMedia {
+  id          String   @id @default(uuid())
+  userId      String
+  incidentId  String?
+  url         String
+  type        String
+  size        Int
+  publicId    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime?
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  incident    Incident? @relation(fields: [incidentId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([incidentId])
+}
+
+model Notification {
+  id        String           @id @default(uuid())
+  userId    String
+  type      NotificationType
+  title     String
+  message   String
+  isRead    Boolean          @default(false)
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+  deletedAt DateTime?
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([isRead])
+  @@index([type])
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  ipAddress String?
+  userAgent String?
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  isRevoked Boolean  @default(false)
+  createdAt DateTime @default(now())
+  revokedAt DateTime?
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([isRevoked])
+}
+
+model AuditLog {
+  id        String         @id @default(uuid())
+  userId    String
+  action    AuditLogAction
+  metadata  Json?
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime       @default(now())
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([action])
+  @@index([createdAt])
+}
+
+model EmailVerificationToken {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

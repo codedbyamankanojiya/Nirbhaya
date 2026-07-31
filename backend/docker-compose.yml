@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: nirbhaya-db
+    environment:
+      POSTGRES_USER: nirbhaya
+      POSTGRES_PASSWORD: nirbhaya123
+      POSTGRES_DB: nirbhaya
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nirbhaya"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nirbhaya-api
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://nirbhaya:nirbhaya123@postgres:5432/nirbhaya?schema=public
+      PORT: 3000
+      NODE_ENV: production
+      JWT_ACCESS_SECRET: your-super-secret-access-token-key-change-this-in-production
+      JWT_REFRESH_SECRET: your-super-secret-refresh-token-key-change-this-in-production
+      JWT_ACCESS_EXPIRES_IN: 15m
+      JWT_REFRESH_EXPIRES_IN: 7d
+      CLOUDINARY_CLOUD_NAME: your-cloud-name
+      CLOUDINARY_API_KEY: your-api-key
+      CLOUDINARY_API_SECRET: your-api-secret
+      SMTP_HOST: smtp.example.com
+      SMTP_PORT: 587
+      SMTP_USER: your-email@example.com
+      SMTP_PASS: your-email-password
+      EMAIL_FROM: noreply@nirbhaya.com
+      CORS_ORIGIN: http://localhost:3001
+      THROTTLE_TTL: 60
+      THROTTLE_LIMIT: 100
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
