@@ -29,7 +29,7 @@ export function AppShell({ children, className }: { children: ReactNode; classNa
                 "lg:rounded-[42px] lg:shadow-2xl lg:border-[8px] lg:border-neutral-900"
             )}
         >
-            {/* Samsung S25 Punch-hole Camera - desktop (PC) only */}
+            {/* Punch-hole Camera Cutout - desktop (PC) only */}
             <div className="hidden lg:block absolute top-3 left-1/2 -translate-x-1/2 w-3 h-3 bg-black rounded-full z-30 ring-2 ring-neutral-800" aria-hidden />
 
             {/* Screen Container */}

@@ -128,7 +128,16 @@ async function apiFetch<T>(
     headers["Authorization"] = `Bearer ${accessToken}`;
   }
 
-  let res = await fetch(`${API_BASE_URL}${path}`, { ...options, headers });
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE_URL}${path}`, { ...options, headers });
+  } catch (error: any) {
+    throw new ApiError(
+      0,
+      "Unable to connect to backend server. Operating in offline mode.",
+      error
+    );
+  }
 
   // Attempt a single token refresh on 401
   if (res.status === 401 && (refreshToken || loadRefreshTokenFromStorage())) {
@@ -144,16 +153,36 @@ async function apiFetch<T>(
 
     if (refreshed && accessToken) {
       headers["Authorization"] = `Bearer ${accessToken}`;
-      res = await fetch(`${API_BASE_URL}${path}`, { ...options, headers });
+      try {
+        res = await fetch(`${API_BASE_URL}${path}`, { ...options, headers });
+      } catch (error: any) {
+        throw new ApiError(
+          0,
+          "Unable to connect to backend server.",
+          error
+        );
+      }
     }
   }
 
-  const json = await res.json();
+  let json: any = {};
+  try {
+    json = await res.json();
+  } catch {
+    throw new ApiError(
+      res.status,
+      `Server error (${res.status}). Invalid response received.`,
+      null
+    );
+  }
 
   if (!res.ok) {
     const errMsg =
-      json?.message ||
-      (Array.isArray(json?.message) ? json.message[0] : "Request failed");
+      typeof json?.message === "string"
+        ? json.message
+        : Array.isArray(json?.message)
+        ? json.message[0]
+        : `Request failed with status ${res.status}`;
     throw new ApiError(res.status, errMsg, json);
   }
 

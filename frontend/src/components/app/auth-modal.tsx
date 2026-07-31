@@ -18,9 +18,10 @@ import { Shield, LogIn, UserPlus, Loader2, Eye, EyeOff } from "lucide-react";
 interface AuthModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  portalContainer?: HTMLElement | null;
 }
 
-export default function AuthModal({ open, onOpenChange }: AuthModalProps) {
+export default function AuthModal({ open, onOpenChange, portalContainer }: AuthModalProps) {
   const { login, register } = useAuth();
   const { toast } = useToast();
 
@@ -81,7 +82,7 @@ export default function AuthModal({ open, onOpenChange }: AuthModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[420px]">
+      <DialogContent portalContainer={portalContainer} className="w-[92%] max-w-[350px] rounded-2xl p-5 border shadow-2xl max-h-[85vh] overflow-y-auto">
         <DialogHeader className="text-center space-y-3 pb-2">
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
             <Shield className="h-7 w-7 text-primary" />

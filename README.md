@@ -2,17 +2,17 @@
 
 <div align="center">
 
-![Nirbhaya Banner](https://img.shields.io/badge/Safety-First-red?style=for-the-badge)
+![Safety First](https://img.shields.io/badge/Safety-First-red?style=for-the-badge)
 ![Next.js](https://img.shields.io/badge/Next.js-15.5.9-black?style=for-the-badge&logo=next.js)
 ![React](https://img.shields.io/badge/React-19.2.1-61DAFB?style=for-the-badge&logo=react)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.7.3-3178C6?style=for-the-badge&logo=typescript)
 ![NestJS](https://img.shields.io/badge/NestJS-11.0.1-E0234E?style=for-the-badge&logo=nestjs)
 ![Prisma](https://img.shields.io/badge/Prisma-7.8.0-2D3748?style=for-the-badge&logo=prisma)
-![AI Powered](https://img.shields.io/badge/AI-Powered-purple?style=for-the-badge)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14+-4169E1?style=for-the-badge&logo=postgresql)
 
-**A comprehensive, full-stack women's safety and real-time emergency assistance application**
+**A comprehensive, mobile-first women's safety application featuring a one-tap SOS button, smart fake call de-escalation, emergency contact dialing, and real-time distress assistance.**
 
-[Features](#-features) • [Tech Stack](#-tech-stack) • [Architecture](#-architecture) • [Project State](#-project-state) • [Roadmap](#-remaining-roadmap) • [Installation](#-installation-and-setup) • [Usage](#-usage-and-workflows)
+[Overview](#-overview) • [Key Features](#-key-features) • [Tech Stack](#-tech-stack) • [Architecture](#-architecture) • [Environment Setup](#-environment-variables) • [Local Running Guide](#-local-running-guide) • [Vercel Deployment](#-vercel-deployment)
 
 </div>
 
@@ -20,248 +20,224 @@
 
 ## 📖 Overview
 
-**Nirbhaya** is a cutting-edge, mobile-first safety platform designed to provide proactive and responsive security solutions for women. Featuring an authentic smartphone frame mockup (Samsung Galaxy S25+ 5G style), it delivers an immersive personal safety application experience.
+**Nirbhaya** is a modern, mobile-first women's safety application designed for real-world personal protection, instant emergency response, and community risk awareness. Framed inside an interactive smartphone UI emulator, it delivers an authentic mobile experience on web browsers.
 
-The platform is designed in two primary components:
-1. **Frontend**: A Next.js 15 mobile-first web app integrating Google Genkit AI and Gemini 2.5 Flash for contextual safety coaching, crime hotspot mapping, and voice/motion distress analysis.
-2. **Backend**: A NestJS 11 server utilizing a PostgreSQL database with Prisma ORM for JWT session management, emergency contacts, incident logs, secure media uploads, and real-time event notifications.
-
-### 🎯 Mission
-
-To empower women with technology-driven safety tools that provide peace of mind, instant emergency response capabilities, and intelligent safety insights.
+The system is engineered as a monorepo consisting of:
+1. **Frontend (`frontend/`)**: Next.js 15 web application with React 19, Tailwind CSS, shadcn/ui components, `AuthContext` with JWT session restoration, interactive safety profile manager, and emergency dialing interface.
+2. **Backend (`backend/`)**: NestJS 11 REST API with Prisma 7.8.0 ORM (`@prisma/adapter-pg`), PostgreSQL database, JWT authentication, bcrypt password hashing, Multer Cloudinary media uploads, and Swagger API documentation.
 
 ---
 
-## ✨ Features
+## ✨ Key Features
 
-### 🆘 **Emergency SOS Trigger**
-- **One-Tap SOS Button**: Highlighted with interactive pulse animations.
-- **Confirmation dialog**: Prevents accidental triggers.
-- **Broadcast System**: Designed to send instant alerts and live coordinates to emergency guardians and local authorities.
+### 👤 **Interactive Safety Profile & Medical Information**
+- **Personal Details Manager**: Edit Full Name, Emergency Phone, Contact Email, Address, DOB, and Gender.
+- **Medical Emergency Profile**: Store Blood Group, Known Allergies, Medical Conditions, and Special Instructions for paramedics.
+- **Hybrid Persistence**: Instant local storage fallback for offline device use + cloud synchronization with NestJS backend (`/api/v1/profile`).
 
-### 📞 **Samsung S25+ Smart Call Emulator**
-- **Fake Call**: Instantly simulates a highly realistic incoming phone call to de-escalate unsafe situations.
-- **Discreet Call Interface**: Standard dialing screens for all emergency contacts.
-- **Outgoing & Incoming modes**: Dynamic layouts with user-customized avatars.
+### 👥 **Emergency Contacts & Smart Dialing**
+- **Contact Management**: Add, edit, and delete emergency contacts with custom relationship tags (*Family, Friend, Guardian, Emergency Services, Doctor, Neighbor*).
+- **Outward Dialing Simulation**: One-tap phone icon triggers an emergency call screen layout with custom contact avatars.
+- **REST API Sync**: Direct integration with `/api/v1/contacts` database endpoints.
 
-### 🗺️ **Community Safety Map & Hotspots**
-- **AI Crime Heatmaps**: Highlights high-risk areas based on time of day.
-- **Safe Route Suggestions**: Recommends optimized paths considering lighting scores, crowd densities, and police box proximity.
-- Powered by Google Genkit AI for real-time safety mapping.
+### 🔐 **Authentication & Session Security**
+- **JWT Auth Flow**: Registration and Login dialogs supporting password visibility toggles, form validation, and toast notifications.
+- **Token Rotation**: Automatic access token refresh using HTTP 401 interceptors.
+- **Guest / Preview Mode**: Explicit indicators when running unauthenticated with seamless transition to cloud mode upon sign-in.
 
-### 🤖 **AI Safety Coach / Assistant**
-- Conversational chat interface for immediate, contextual safety tips.
-- Factors in user's current location, local time of day, and recent crime trends.
-- Powered by Google Gemini.
-
-### 👥 **Guardian Tracking & Resource Library**
-- **Walking With Me**: Live location-sharing session for guardians.
-- **Emergency Directory**: Quick dial for police, medical, and national hotlines.
-- **Resources**: Self-defense tutorials, legal guides, and emergency guidelines.
+### 📞 **Smart Fake Call De-escalation**
+- **Instant Fake Call**: Simulates a realistic incoming call to help exit uncomfortable or unsafe situations discreetly.
+- **Interactive UI**: Accept, decline, or talk through a simulated call interface.
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Tech Stack & Dependencies
 
-### 📱 Frontend (Client)
-- **Framework**: Next.js 15.5.9 (App Router) & React 19.2.1
-- **Styling**: Tailwind CSS & shadcn/ui components (Radix UI primitives)
-- **Icons**: Lucide React
-- **Theme**: `next-themes` (Dark Mode optimized by default for discreet night use)
-
-### ⚙️ Backend (Server)
-- **Framework**: NestJS 11.0.1 (Node.js)
-- **Database**: PostgreSQL with Prisma ORM 7.8.0
-- **Auth**: JWT (Access & Refresh token rotation)
-- **File Uploads**: Cloudinary API with `multer-storage-cloudinary`
-- **Security & Rate Limiting**: Helmet & NestJS Throttler
-- **Emails**: Nodemailer (SMTP transport)
-
-### 🤖 AI Orchestration
-- **Google Genkit 1.20.0**
-- **@genkit-ai/google-genai** (Gemini 2.5 Flash model)
+| Component | Technology | Version |
+| :--- | :--- | :--- |
+| **Frontend Framework** | Next.js (App Router) | `15.5.9` |
+| **UI Library** | React | `19.2.1` |
+| **Styling** | Tailwind CSS & shadcn/ui (Radix UI) | `3.4.1` |
+| **Icons** | Lucide React | `0.475.0` |
+| **Theme** | next-themes (Dark mode optimized) | `0.4.0` |
+| **Backend Framework** | NestJS | `11.0.1` |
+| **Database ORM** | Prisma 7 (with `@prisma/adapter-pg`) | `7.8.0` |
+| **Database** | PostgreSQL | `14+` |
+| **Authentication** | Passport.js & JWT (`@nestjs/jwt`) | `11.0.2` |
+| **Password Hashing** | bcryptjs | `3.0.3` |
+| **File Storage** | Cloudinary & Multer | `1.41.3` |
 
 ---
 
-## 🏗️ Architecture
+## 🏗️ System Architecture
 
 ```mermaid
 graph TD
-    subgraph Frontend [Next.js Client (Port 9002)]
-        UI[App Shell / Mobile mockup]
-        GenkitClient[Genkit Server Actions]
-        State[React State / Context]
+    subgraph Frontend [Next.js Client — Port 3001]
+        UI[App Shell / Mobile Frame]
+        AuthContext[Auth Context / Session Restore]
+        ApiClient[API Client / Fetch Interceptor]
     end
 
-    subgraph AI Orchestration [Google Genkit]
-        GenkitClient -->|Flow Trigger| Flows[AI Flows]
-        Flows -->|Gemini API| Gemini[Gemini 2.5 Flash]
+    subgraph Backend [NestJS Server — Port 3000]
+        AuthCtrl[Auth Controller /api/v1/auth]
+        ProfileCtrl[Profile Controller /api/v1/profile]
+        ContactsCtrl[Contacts Controller /api/v1/contacts]
+        SosCtrl[SOS Controller /api/v1/sos]
+        IncidentsCtrl[Incidents Controller /api/v1/incidents]
+        UploadsCtrl[Uploads Controller /api/v1/uploads]
+        PrismaService[Prisma Service with PrismaPg Adapter]
     end
 
-    subgraph Backend [NestJS Server (Port 3000)]
-        AuthCtrl[Auth Controller]
-        SosCtrl[SOS Controller]
-        ContactsCtrl[Contacts Controller]
-        ProfileCtrl[Profile Controller]
-        UploadsCtrl[Uploads Controller]
-        DbService[Prisma Service]
+    subgraph Persistence [Cloud Storage & Database]
+        PrismaService -->|pg Pool Connection| Postgres[(PostgreSQL Database: nirbhaya)]
+        UploadsCtrl -->|Media Storage| Cloudinary[Cloudinary API]
     end
 
-    subgraph Storage [Persistence & Cloud Services]
-        DbService -->|SQL Query| Postgres[(PostgreSQL Database)]
-        UploadsCtrl -->|Secure Save| Cloudinary[Cloudinary Storage]
-    end
-
-    UI -->|Interactive UI| State
-    UI -.->|Pending Integration| AuthCtrl
-    UI -.->|Pending Integration| SosCtrl
-    UI -.->|Pending Integration| ContactsCtrl
-    UI -.->|Pending Integration| ProfileCtrl
-    UI -.->|Pending Integration| UploadsCtrl
+    UI --> AuthContext
+    AuthContext --> ApiClient
+    ApiClient -->|REST HTTP Requests| AuthCtrl
+    ApiClient -->|REST HTTP Requests| ProfileCtrl
+    ApiClient -->|REST HTTP Requests| ContactsCtrl
 ```
 
 ---
 
-## 📁 Folder Structure
+## 📁 Repository Structure
 
 ```
 nirbhaya/
-├── frontend/                 # Frontend Next.js 15 application
-│   ├── src/                  # App screens & Genkit flow definitions
-│   │   ├── app/              # Router paths & theme provider
-│   │   ├── components/       # UI & simulated device layouts
-│   │   └── ai/               # Genkit & Gemini orchestration
-│   ├── public/               # Static assets & illustrations
-│   └── package.json          # Dependencies & startup scripts
+├── frontend/                     # Next.js 15 Client Application
+│   ├── src/
+│   │   ├── app/                  # App Router & page wrappers
+│   │   ├── components/app/       # Mobile app screens & auth modals
+│   │   ├── context/              # AuthContext provider
+│   │   ├── lib/                  # api.ts client & utilities
+│   │   └── ai/                   # Genkit AI flow definitions
+│   ├── .env.example              # Frontend environment template
+│   ├── vercel.json               # Vercel deployment configuration
+│   └── package.json              # Client scripts (dev: port 3001)
 │
-├── backend/                  # Backend NestJS 11 application
-│   ├── src/                  # REST controllers & services
-│   │   ├── modules/          # Auth, SOS, contacts, uploads modules
-│   │   └── database/         # Prisma Database Service configuration
-│   ├── prisma/               # Database model & migration schemas
-│   └── package.json          # Dependencies & build pipelines
+├── backend/                      # NestJS 11 Server Application
+│   ├── src/
+│   │   ├── modules/              # Auth, profile, contacts, sos, uploads modules
+│   │   ├── database/             # PrismaService with PrismaPg pool adapter
+│   │   ├── config/               # Application configuration
+│   │   └── main.ts               # NestJS bootstrap & CORS settings
+│   ├── prisma/
+│   │   ├── schema.prisma         # Prisma database schema
+│   │   └── migrations/           # PostgreSQL migration SQL files
+│   ├── .env.example              # Backend environment template
+│   └── package.json              # Server scripts (start: port 3000)
 │
-└── README.md                 # Unified project documentation
+└── README.md                     # Comprehensive project documentation
 ```
 
 ---
 
-## 🚦 Project State & Demo Mode
+## 🔑 Environment Variables Guide
 
-The project is currently in a **partially-integrated prototyping phase**:
+Before running locally or deploying, populate the `.env` files using these templates:
 
-1. **Frontend App Mockup**: The Next.js frontend is fully styled and responsive, simulating the phone UI using mock states (e.g. Priya Sharma profile, static contacts list, and fallback triggers).
-2. **AI Flows (Genkit)**: Genkit server actions are fully configured and functional when a `GOOGLE_GENAI_API_KEY` is provided. If the AI service fails or times out, the screens automatically fall back to **Demo Mode** to show simulation data.
-3. **Backend Service (NestJS)**: The backend contains modular REST controllers and database schemas. It is not yet connected to the Next.js client, meaning the frontend does not currently query or update the database.
-4. **Distress Detection**: The Genkit distress detection flow (audio & sensor parsing) is implemented on the server but is not yet wired into the frontend UI.
+### 1. Backend (`backend/.env`)
 
----
+Create `backend/.env` from `backend/.env.example`:
 
-## 📋 Remaining Roadmap (TODO)
+```env
+# Server Configuration
+PORT=3000
+NODE_ENV=development
 
-To transform Nirbhaya from a high-fidelity prototype into a production-ready application, the following tasks remain:
+# PostgreSQL Connection String (Prisma 7)
+DATABASE_URL="postgresql://postgres:Ammy%40123@localhost:5432/nirbhaya?schema=public"
 
-- [ ] **Frontend-Backend API Binding**:
-  - Replace client-side mock states in `profile-screen.tsx`, `tracking-screen.tsx`, and `home-screen.tsx` with actual `fetch` queries pointing to the NestJS API.
-  - Implement Frontend SignUp/SignIn screens communicating with `/api/v1/auth`.
-- [ ] **Live Location & WebSockets**:
-  - Integrate Socket.io between NestJS (`notifications` module) and Next.js client.
-  - Implement real-time coordinate broadcasts to guardians during a "Walking With Me" session.
-- [ ] **Cloudinary Video Uploads**:
-  - Upload captured evidence videos from `home-screen.tsx` directly to the `/api/v1/uploads` endpoint to store them securely.
-- [ ] **Distress Detection UI integration**:
-  - Wire the `detectDistress` flow to run via device microphone triggers or a "Simulate Incident" option.
-- [ ] **Database Deployment**:
-  - Launch a PostgreSQL server and run Prisma migrations to provision the schema tables.
+# JWT Secret Keys
+JWT_ACCESS_SECRET="your-super-secret-access-token-key"
+JWT_REFRESH_SECRET="your-super-secret-refresh-token-key"
+JWT_ACCESS_EXPIRES_IN="15m"
+JWT_REFRESH_EXPIRES_IN="7d"
 
----
+# Cloudinary Credentials (Evidence Uploads)
+CLOUDINARY_CLOUD_NAME="your-cloudinary-cloud-name"
+CLOUDINARY_API_KEY="your-cloudinary-api-key"
+CLOUDINARY_API_SECRET="your-cloudinary-api-secret"
 
-## 🚀 Installation and Setup
+# Email SMTP Settings (Nodemailer Verification & Reset)
+SMTP_HOST="smtp.example.com"
+SMTP_PORT=587
+SMTP_USER="your-email@example.com"
+SMTP_PASS="your-email-password"
+EMAIL_FROM="noreply@nirbhaya.com"
 
-### 1. Setup Database & Backend
+# Allowed CORS Origins (Frontend dev server on port 3001)
+CORS_ORIGIN="http://localhost:3001"
 
-1. Navigate to the `backend` directory:
-   ```bash
-   cd backend
-   ```
-2. Install NestJS dependencies:
-   ```bash
-   npm install
-   ```
-3. Set up your environment variables:
-   Copy `.env.example` to `.env` and fill in the details:
-   ```env
-   PORT=3000
-   DATABASE_URL="postgresql://username:password@localhost:5432/nirbhaya_db?schema=public"
-   JWT_ACCESS_SECRET="your-access-secret"
-   JWT_REFRESH_SECRET="your-refresh-secret"
-   CLOUDINARY_CLOUD_NAME="your-cloudinary-name"
-   CLOUDINARY_API_KEY="your-api-key"
-   CLOUDINARY_API_SECRET="your-api-secret"
-   ```
-4. Run Prisma database migrations:
-   ```bash
-   npx prisma migrate dev --name init
-   ```
-5. Start the backend in development/watch mode:
-   ```bash
-   npm run start:dev
-   ```
-   *Swagger documentation will be available at [http://localhost:3000/api/docs](http://localhost:3000/api/docs).*
+# Throttler Rate Limiting
+THROTTLE_TTL=60
+THROTTLE_LIMIT=100
+```
 
-### 2. Setup Next.js Frontend
+### 2. Frontend (`frontend/.env.local`)
 
-1. Navigate to the `frontend` directory:
-   ```bash
-   cd frontend
-   ```
-2. Install frontend dependencies:
-   ```bash
-   npm install
-   ```
-3. Create `.env.local` in the `frontend` folder:
-   ```env
-   # Google AI Key for Genkit
-   GOOGLE_GENAI_API_KEY=your_gemini_api_key_here
-   ```
-4. Start the Next.js development server:
-   ```bash
-   npm run dev
-   ```
-5. Open [http://localhost:9002](http://localhost:9002) in your browser. Use the responsive layout (or browser responsive developer tools) to view the smartphone interface.
+Create `frontend/.env.local` from `frontend/.env.example`:
+
+```env
+# NestJS Backend API Base URL
+NEXT_PUBLIC_API_URL=http://localhost:3000
+
+# Google Gemini / Genkit AI Key (Optional for AI features)
+GOOGLE_GENAI_API_KEY=your-google-gemini-api-key-here
+```
 
 ---
 
-## 🔐 Security & Privacy
+## 🚀 Local Running Guide
 
-- **Data Privacy**: No user contact numbers or real-time location histories are exposed without active SOS/Walking mode session triggers.
-- **Rate Limiting**: NestJS Throttler protects API endpoints against Denial of Service (DoS) and brute force login attempts.
-- **Access Control**: JWT token verification (using HTTP header Bearer Authorization) secures all backend resources, with role-based policies (User vs Admin).
+To run both backend and frontend locally without port collisions:
+
+### Step 1: Start Backend (Terminal 1)
+```bash
+cd backend
+npm install
+npx prisma generate
+npm start
+```
+- **Backend API**: [http://localhost:3000](http://localhost:3000)
+- **Swagger Documentation**: [http://localhost:3000/api/docs](http://localhost:3000/api/docs)
+
+### Step 2: Start Frontend (Terminal 2)
+```bash
+cd frontend
+npm install
+npm run dev
+```
+- **Frontend Web App**: [http://localhost:3001](http://localhost:3001)
 
 ---
 
-## 👨‍💻 Developer
+## ☁️ Vercel Deployment (Showcase)
+
+To deploy the frontend to Vercel:
+
+1. Import the repository on [Vercel](https://vercel.com).
+2. Set **Root Directory** to `frontend`.
+3. Add Environment Variable:
+   - `NEXT_PUBLIC_API_URL`: URL of your deployed NestJS backend API.
+4. Deploy! Vercel automatically uses `frontend/vercel.json` and builds Next.js.
+
+---
+
+## 👨‍💻 Developer & Author
 
 **Aman Kanojiya**
-
 - **GitHub**: [@codedbyamankanojiya](https://github.com/codedbyamankanojiya)
 - **LinkedIn**: [Aman Kanojiya](https://www.linkedin.com/in/aman-kanojiya-7386822b0)
 - **Email**: aman.knj2006@gmail.com
 
 ---
 
-## 🙏 Acknowledgments
-
-- **Google Genkit** for the streamlined AI flows.
-- **shadcn** for beautiful UI building blocks.
-- **NestJS** for the scalable backend design.
-
----
-
 <div align="center">
 
-**Made with ❤️ for Women's Safety (Our Mothers & Sisters)**
-
-⭐ Star this repository if you find it helpful!
+**Built for Women's Security & Empowerment (Nirbhaya)**
 
 </div>

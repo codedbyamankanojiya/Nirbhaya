@@ -27,6 +27,7 @@ import { Phone, Video, Shield, Siren } from "lucide-react";
 import type { ScreenId } from "@/app/page";
 import AppHeader from "./app-header";
 import { AlertDialogTrigger } from "@radix-ui/react-alert-dialog";
+import { useAuth } from "@/context/auth-context";
 
 interface ScreenProps {
     onNavigate: (screen: ScreenId) => void;
@@ -46,6 +47,10 @@ const ActionButton: FC<{ icon: React.ElementType, title: string, onClick: () => 
 
 export default function HomeScreen({ onNavigate, onFakeCall, onBack, isHomeScreen }: ScreenProps) {
     const { toast } = useToast();
+    const { user, isAuthenticated } = useAuth();
+    const displayName = isAuthenticated
+        ? (user?.profile?.name?.split(' ')[0] || user?.email?.split('@')[0] || 'User')
+        : 'Guest';
     const [isSosPressed, setIsSosPressed] = useState(false);
 
     const [isRecordDialogOpen, setIsRecordDialogOpen] = useState(false);
@@ -270,7 +275,7 @@ export default function HomeScreen({ onNavigate, onFakeCall, onBack, isHomeScree
 
     return (
         <div className="h-full flex flex-col app-gradient">
-            <AppHeader title="Priya" showBackButton={!isHomeScreen} onBack={onBack} welcomeMessage="Welcome Back," />
+            <AppHeader title={displayName} showBackButton={!isHomeScreen} onBack={onBack} welcomeMessage={isAuthenticated ? "Welcome Back," : "Welcome,"} />
 
             <Dialog open={isRecordDialogOpen} onOpenChange={setIsRecordDialogOpen}>
                 <DialogContent
