@@ -1,0 +1,76 @@
+# Nirbhaya Flutter App .gitignore
+
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+*.tmp
+*.bak
+*.orig
+*~
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# VS Code
+.vscode/
+
+# Flutter/Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+.pub-cache/
+.pub/
+
+# Gradle & Android
+.gradle/
+android/.gradle/
+android/.kotlin/
+local.properties
+/android/app/debug
+/android/app/profile
+/android/app/release
+*.apk
+*.aab
+*.jks
+*.keystore
+key.properties
+GeneratedPluginRegistrant.*
+
+# iOS
+/ios/Pods/
+/ios/.symlinks/
+/ios/Flutter/Generated.xcconfig
+/ios/Flutter/app.framework
+/ios/Runner.xcworkspace/xcshareddata/
+/ios/Runner.xcodeproj/xcuserdata/
+
+# Desktop Ephemeral
+windows/flutter/ephemeral/
+macos/Flutter/ephemeral/
+linux/flutter/ephemeral/
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Code generation
+*.g.dart
+*.freezed.dart
+
+# Coverage & Tests
+coverage/
+test/.test_coverage.dart
