@@ -14,6 +14,7 @@ import 'package:nirbhaya/features/notifications/presentation/notifications_scree
 import 'package:nirbhaya/features/settings/presentation/settings_screen.dart';
 import 'package:nirbhaya/features/fake_call/presentation/fake_call_screen.dart';
 import 'package:nirbhaya/features/sos/presentation/sos_active_screen.dart';
+import 'package:nirbhaya/features/splash/presentation/splash_screen.dart';
 import 'package:nirbhaya/shared/widgets/app_shell.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey =
@@ -21,8 +22,13 @@ final GlobalKey<NavigatorState> _rootNavigatorKey =
 
 final goRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
-  initialLocation: '/',
+  initialLocation: '/splash',
   routes: [
+    GoRoute(
+      path: '/splash',
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (context, state) => const SplashScreen(),
+    ),
     // Bottom Navigation Shell
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
