@@ -1,31 +1,49 @@
-# Nirbhaya Flutter App .gitignore
+# ==============================================================================
+# Nirbhaya Women's Safety & Emergency Assistance - Production .gitignore
+# Hardened to prevent secret, credential, token, and personal data leaks to GitHub
+# ==============================================================================
 
-# Miscellaneous
-*.class
-*.log
-*.pyc
-*.swp
-.DS_Store
-.atom/
-.buildlog/
-.history
-.svn/
-migrate_working_dir/
-*.tmp
-*.bak
-*.orig
-*~
+# ------------------------------------------------------------------------------
+# Secrets, Credentials, & Environment Variables (STRICT ZERO-LEAK POLICY)
+# ------------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.env
+*.pem
+*.key
+*.cert
+*.crt
+*.p12
+*.pfx
+secrets.dart
+credentials.json
+service-account*.json
 
-# IntelliJ related
-*.iml
-*.ipr
-*.iws
-.idea/
+# Firebase Project Credentials (User specific project IDs & keys)
+android/app/google-services.json
+!android/app/google-services.json.example
+ios/Runner/GoogleService-Info.plist
+!ios/Runner/GoogleService-Info.plist.example
+macos/Runner/GoogleService-Info.plist
+lib/firebase_options.dart
+!lib/firebase_options.dart.example
+firebase-debug.log*
+firestore-debug.log*
+ui-debug.log
 
-# VS Code
-.vscode/
+# Android Keystores & Release Signing
+*.jks
+*.keystore
+key.properties
+signing-key.properties
+android/key.properties
+android/local.properties
+local.properties
 
-# Flutter/Dart
+# ------------------------------------------------------------------------------
+# Flutter & Dart Ephemerals
+# ------------------------------------------------------------------------------
 .dart_tool/
 .flutter-plugins
 .flutter-plugins-dependencies
@@ -34,43 +52,83 @@ build/
 .pub-cache/
 .pub/
 
-# Gradle & Android
+# Code Generation (Rebuildable via build_runner)
+*.g.dart
+*.freezed.dart
+
+# ------------------------------------------------------------------------------
+# Android Build Outputs & Gradle Cache
+# ------------------------------------------------------------------------------
 .gradle/
 android/.gradle/
 android/.kotlin/
-local.properties
 /android/app/debug
 /android/app/profile
 /android/app/release
 *.apk
 *.aab
-*.jks
-*.keystore
-key.properties
 GeneratedPluginRegistrant.*
 
-# iOS
+# ------------------------------------------------------------------------------
+# iOS & macOS Build Ephemerals
+# ------------------------------------------------------------------------------
 /ios/Pods/
 /ios/.symlinks/
 /ios/Flutter/Generated.xcconfig
 /ios/Flutter/app.framework
 /ios/Runner.xcworkspace/xcshareddata/
 /ios/Runner.xcodeproj/xcuserdata/
+/ios/Runner.xcodeproj/project.xcworkspace/xcuserdata/
+/macos/Pods/
+/macos/.symlinks/
+/macos/Flutter/Generated.xcconfig
+/macos/Runner.xcworkspace/xcshareddata/
+/macos/Runner.xcodeproj/xcuserdata/
 
-# Desktop Ephemeral
+# ------------------------------------------------------------------------------
+# Desktop Ephemeral Directories
+# ------------------------------------------------------------------------------
 windows/flutter/ephemeral/
 macos/Flutter/ephemeral/
 linux/flutter/ephemeral/
 
-# Environment files
-.env
-.env.local
-.env.production
+# ------------------------------------------------------------------------------
+# IDEs & Developer Environment
+# ------------------------------------------------------------------------------
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.swp
+*.swo
+*~
+.atom/
 
-# Code generation
-*.g.dart
-*.freezed.dart
+# ------------------------------------------------------------------------------
+# Operating System Ephemerals
+# ------------------------------------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+[Dd]esktop.ini
 
-# Coverage & Tests
+# ------------------------------------------------------------------------------
+# Testing & Code Coverage
+# ------------------------------------------------------------------------------
 coverage/
 test/.test_coverage.dart
+*.lcov
+
+# ------------------------------------------------------------------------------
+# Temporary & Log Files
+# ------------------------------------------------------------------------------
+*.log
+*.tmp
+*.bak
+*.orig
+.history

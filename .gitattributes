@@ -1,7 +1,11 @@
+# ==============================================================================
+# Nirbhaya Git Attributes - Line Endings & Asset Integrity
+# ==============================================================================
+
 # Auto detect text files and perform LF normalization
 * text=auto
 
-# Source code files - normalize line endings to LF
+# Source code files - force LF line endings
 *.dart text eol=lf
 *.ts text eol=lf
 *.js text eol=lf
@@ -18,6 +22,8 @@
 *.kts text eol=lf
 *.properties text eol=lf
 *.env* text eol=lf
+*.arb text eol=lf
+*.rules text eol=lf
 
 # Shell scripts - force LF for Linux/macOS execution
 *.sh text eol=lf
@@ -35,8 +41,14 @@
 *.gif binary
 *.ico binary
 *.svg binary
+*.webp binary
+*.mp3 binary
+*.mp4 binary
+*.m4a binary
+*.wav binary
 *.pdf binary
 *.ttf binary
+*.otf binary
 *.woff binary
 *.woff2 binary
 *.jar binary
@@ -46,3 +58,12 @@
 *.dll binary
 *.jks binary
 *.keystore binary
+
+# Linguist overrides (exclude generated or vendor files from GitHub language stats)
+android/** linguist-vendored
+ios/** linguist-vendored
+windows/** linguist-vendored
+macos/** linguist-vendored
+linux/** linguist-vendored
+*.g.dart linguist-generated=true
+*.freezed.dart linguist-generated=true

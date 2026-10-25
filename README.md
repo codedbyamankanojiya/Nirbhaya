@@ -2,23 +2,26 @@
 
 # 🛡️ Nirbhaya (निर्भया)
 ### Women's Safety & Emergency Assistance Platform
+##### Sole Creator & Developer: **[Aman Kanojiya](https://codedbyamankanojiya.vercel.app)**
 
-[![Flutter Version](https://img.shields.io/badge/Flutter-3.5%2B-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
+[![Flutter Version](https://img.shields.io/badge/Flutter-3.24%2B-02569B?logo=flutter&logoColor=white)](https://flutter.dev)
 [![Dart Version](https://img.shields.io/badge/Dart-3.5%2B-0175C2?logo=dart&logoColor=white)](https://dart.dev)
-[![Architecture](https://img.shields.io/badge/Architecture-Feature--Driven%20Riverpod-orange)](docs/architecture.md)
-[![Platform](https://img.shields.io/badge/Platforms-Android%20%7C%20iOS%20%7C%20Web%20%7C%20Desktop-green)](#running-the-application)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Firebase](https://img.shields.io/badge/Firebase-Cloud%20Firestore-FFA611?logo=firebase&logoColor=white)](https://firebase.google.com)
+[![Gemini AI](https://img.shields.io/badge/Google%20Gemini-1.5%20Flash-4285F4?logo=google&logoColor=white)](https://aistudio.google.com)
+[![State Management](https://img.shields.io/badge/Architecture-Riverpod%202.6%2B-orange)](docs/MANUAL_SETUP_GUIDE.md)
+[![Platforms](https://img.shields.io/badge/Platforms-Android%20%7C%20iOS%20%7C%20Web-green)](#-quick-start-guide)
+[![Security Policy](https://img.shields.io/badge/Security-Strict%20Zero--Leak-red)](docs/SECURITY.md)
 
-*A production-ready, cross-platform personal safety ecosystem engineered to deliver rapid emergency distress dispatch, real-time geolocated threat mapping, live journey tracking, and discreet de-escalation tools.*
+*A production-ready, life-critical personal safety ecosystem engineered to deliver rapid emergency distress dispatch, real-time geolocated threat mapping, covert audio/video evidence capture, and intelligent crisis assistance.*
 
 ---
 
 [Key Features](#-key-features) •
 [Architecture](#-system-architecture) •
 [Quick Start](#-quick-start-guide) •
-[Configuration](#-environment-configuration) •
-[Project Structure](#-project-structure) •
-[Documentation](#-comprehensive-documentation)
+[Firebase & AI Setup](#-firebase--gemini-ai-configuration) •
+[Security & Zero-Leak Policy](#-security--zero-leak-policy) •
+[Contributing](#-contributing)
 
 ---
 
@@ -27,156 +30,82 @@
 ## 🌟 Key Features
 
 ### 🚨 Emergency Response & SOS System
-- **One-Touch SOS Activation**: High-visibility distress button with optional safety countdown to prevent accidental triggers.
-- **Real-Time GPS Location Broadcast**: Instantly captures precise latitude and longitude coordinates and transmits distress payloads to the backend API.
-- **Hardware Trigger Support**: Haptic feedback alerts with wakelock protection to prevent phone lock during an active distress state.
-- **Two-Way Status Synchronization**: Seamlessly updates distress statuses between `TRIGGERED`, `CANCELLED` (false alarm), and `RESOLVED` directly with the backend.
+- **One-Touch SOS Activation**: High-visibility distress button with configurable safety countdown (1s–10s) and haptic pulsing.
+- **Fail-Safe Cancellation & "I'm Safe"**: Instantly halts all background countdown timers, silences emergency vibrations, releases the screen wakelock, and synchronizes status to `RESOLVED` or `FALSE_ALARM`.
+- **Hardware Integration**: High-frequency strobe flashlight, dual-tone alarm siren, screen wakelock, and multi-pattern vibrations.
+- **Offline Hardware Dispatch**: Immediately dials emergency numbers (112 ERSS, 1091 Women Helpline) and sends emergency SMS with precise GPS coordinates directly through native device telephony.
 
-### 🗺️ Live Safety Map & Verified Safe Havens
-- **Live Location Tracking**: Interactive OpenStreetMap interface using `flutter_map` and `latlong2`.
-- **Live Safety POI Discovery**: Real-time geolocation lookup via OpenStreetMap / Photon geocoding engine discovering nearby:
-  - 🚓 **Police Stations & Beats**
-  - 🏥 **Hospitals & 24/7 Emergency Care**
-  - 🚒 **Fire Stations**
-  - 🏠 **Designated Women Shelters & Safe Havens**
-- **Direct Navigation & Dialing**: Single-tap dialing and route calculation to any discovered emergency point.
+### 🗺️ Live Safety Map & Real-Time Tracking
+- **Continuous High-Accuracy GPS**: Live `Geolocator.getPositionStream` with pulsing animated radar marker and compass heading.
+- **OpenStreetMap (100% Free & Open Source)**: Zero dependency on paid Google Maps APIs or billing accounts.
+- **Emergency Safe Havens Discovery**: Discovers nearby Police Stations, Hospitals, Fire Stations, and Women Shelters with single-tap routing.
 
-### 👥 Emergency Contacts & Fast Dispatch
-- **Priority Contact Ordering**: Configure primary and secondary emergency contacts with relationship indicators.
-- **Native Dialing & SMS Hand-off**: Immediate one-tap cellular dialing via native `url_launcher`.
-- **Cloud & Local Synchronization**: Contacts are cached locally using `SharedPreferences` for guaranteed offline availability during network drops.
+### 👥 Emergency Contacts & Priority Badges
+- **Guardian Prioritization**: Organize contacts with primary priority badges (`★ PRIMARY GUARDIAN`) and relationship categories (`Parent`, `Spouse`, `Sibling`, `Friend`, `Guardian`, `Doctor`, `Police`).
+- **Single-Tap Calling & SMS**: Instant cell call or pre-formatted SOS distress text dispatch.
+- **Dual-Layer Persistence**: Stored locally in `SharedPreferences` for offline access AND synchronized to Cloud Firestore (`users/{uid}/contacts`).
 
-### ⚠️ Incident Reporting & Community Risk Alerts
-- **GPS-Tagged Incident Creation**: Log incidents with real-time geographic coordinates, category classification (e.g. Harassment, Stalking, Suspicious Activity, Poor Lighting), and severity ratings.
-- **Evidence Attachment**: Integrated camera and media picker for instant photo and evidence capture.
-- **Community Threat Awareness**: Browse live geotagged incidents to remain informed of high-risk zones.
+### 👤 Comprehensive Medical & Profile Card
+- **Medical Emergency Data**: Records Blood Group, Allergies, Pre-existing Conditions, Primary Physician, and Medical Notes.
+- **Emergency Identifiers**: Government ID / Aadhaar verification, Emergency Code, and Vehicle Number.
+- **Distress Interlink**: Medical and personal profile data automatically attaches to emergency SOS distress payloads.
 
-### 🎭 De-Escalation & Covert Tools
-- **Realistic Fake Call Simulator**: Configurable simulated incoming call interface complete with custom caller names, realistic ringing, screen vibration, and interactive call answering to safely escape uncomfortable or threatening situations.
-- **Evidence & Audio Capture**: Dispatched recording utilities for capturing audio evidence during distress situations.
-- **Offline Safety Guidelines**: Comprehensive pre-loaded safety tips, self-defense tactics, and legal rights resources.
+### 📹 Covert Evidence Studio & Vault
+- **Multi-Mode Capture**: Instant Photo Capture, Video Capture, and Stealth Audio Recording.
+- **Covert Audio Mode**: Real-time recording timer, live audio waveform visualizer, and an OLED Blackout Screen to prevent detection.
+- **Secure Sandboxed Vault**: Stored in isolated device storage before optional cloud backup.
 
-### 📞 National Helplines Directory
-- Instant direct-dial access to national emergency numbers:
-  - **112**: All-in-One National Emergency Response Support System (ERSS)
-  - **1091**: Women Helpline (24x7 Emergency Assistance)
-  - **100**: Police Control Room
-  - **181**: Domestic Abuse & Violence Helpline
-  - **1098**: Childline Support
+### 🤖 Intelligent AI Safety & Legal Assistant
+- **Google Gemini 1.5 Flash**: Real-time crisis guidance and threat de-escalation powered by Google Gemini AI.
+- **Offline Indian Legal Rights Engine**: Built-in comprehensive rules engine answering questions on **Zero FIR**, **POCSO Act**, **POSH Act**, **Domestic Violence Act**, and police procedures without needing an internet connection.
+
+### 📚 Dedicated Helpline Directory & Safety Guides
+- **Emergency Directory**: Single-tap direct dialing to 112 (ERSS), 1091 (Women Helpline), 181 (Domestic Abuse), 1930 (Cyber Crime), 100 (Police), 1098 (Childline), and NCW.
+- **Interactive Action Guides**: Step-by-step checklists for Combat Readiness, Cab/Travel Safety, Stalking Protection, and Legal Rights.
 
 ---
 
 ## 🏗️ System Architecture
 
-Nirbhaya is engineered using a clean, feature-first, domain-driven layered architecture built on **Riverpod 2.6+** and **GoRouter 14.8+**.
+Nirbhaya is engineered using a clean, feature-first, domain-driven architecture built on **Flutter Riverpod 2.6+** and **Material 3**:
 
 ```mermaid
 graph TD
     subgraph UI ["Presentation Layer (Material 3)"]
-        Screens["Screens & Pages"]
-        Widgets["Reusable Design Components"]
-        Theme["Material 3 Theme (Light / Dark)"]
+        Screens["Screens (SOS, Maps, Profile, Evidence)"]
+        Overlays["Reactive SOS Countdown & Active Overlay"]
+        Theme["Material 3 Design Tokens (Dark Mode)"]
     end
 
-    subgraph State ["State Management Layer (Riverpod)"]
-        Notifiers["StateNotifiers & AsyncNotifiers"]
-        Providers["Feature Providers (SOS, Map, Contacts, Auth)"]
+    subgraph State ["State Management (Riverpod 2.6+)"]
+        SosNotifier["SOS State Machine (Idle, Countdown, Active)"]
+        MapNotifier["Live GPS Stream & Recenter Lock"]
+        SettingsNotifier["Safety Settings & Hardware Prefs"]
     end
 
-    subgraph Domain ["Domain & Data Layer"]
-        Repos["Feature Repositories"]
-        Models["Data Models (Freezed / JSON Serializable)"]
+    subgraph Data ["Data & Repository Layer"]
+        SosRepo["SOS Repository"]
+        ContactsRepo["Contacts Repository"]
+        ProfileRepo["Profile Repository"]
     end
 
-    subgraph Core ["Infrastructure & Networking"]
-        DioClient["Dio HTTP Client + Auth Interceptors"]
-        SecureStorage["Encrypted Hardware Keystore (Tokens)"]
-        LocalStorage["SharedPreferences (Offline Cache)"]
-        GeoService["Geolocator & Permission Handler"]
+    subgraph Hardware ["Device Hardware (Offline First)"]
+        GPS["GPS Chip (Geolocator)"]
+        PhoneDialer["Cellular Telephony (Call & SMS)"]
+        Sensors["Vibrator, Camera Flashlight, Wakelock"]
+        Keystore["Android Keystore (AES-256 GCM)"]
     end
 
-    subgraph Backend ["Companion API Backend"]
-        NestAPI["NestJS 11 REST API Gateway (:3000)"]
-        PostgresDB[("PostgreSQL Database")]
-        OSM["Photon / OpenStreetMap Geo API"]
+    subgraph Cloud ["Cloud & Backend Services"]
+        Firestore["Cloud Firestore (Real-Time SOS & Contacts)"]
+        GeminiAPI["Google Gemini 1.5 Flash AI"]
+        RestAPI["Optional Companion REST API (:3000)"]
     end
 
     UI --> State
-    State --> Domain
-    Domain --> Core
-    Core --> Backend
-```
-
-### Technology Stack
-
-| Layer | Technologies |
-| :--- | :--- |
-| **Framework** | [Flutter 3.5+](https://flutter.dev) (Channel: Stable) |
-| **Language** | [Dart 3.5+](https://dart.dev) |
-| **State Management** | [Flutter Riverpod 2.6.1](https://pub.dev/packages/flutter_riverpod) |
-| **Navigation & Routing** | [GoRouter 14.8.1](https://pub.dev/packages/go_router) |
-| **Networking** | [Dio 5.7.0](https://pub.dev/packages/dio) with JWT silent refresh interceptors |
-| **Hardware Secure Storage** | [flutter_secure_storage 9.2.4](https://pub.dev/packages/flutter_secure_storage) (Android Keystore / iOS Keychain) |
-| **Mapping & Geolocation** | [flutter_map 7.0.2](https://pub.dev/packages/flutter_map), [latlong2 0.9.1](https://pub.dev/packages/latlong2), [geolocator 13.0.2](https://pub.dev/packages/geolocator) |
-| **UI & Styling** | Material Design 3, [Google Fonts (Inter)](https://pub.dev/packages/google_fonts), [flutter_animate](https://pub.dev/packages/flutter_animate) |
-| **Companion Backend** | [NestJS 11](https://nestjs.com), [Prisma 7 ORM](https://www.prisma.io), [PostgreSQL](https://www.postgresql.org) |
-
----
-
-## 📁 Project Structure
-
-The project strictly follows a domain-driven, feature-first structure:
-
-```
-nirbhaya/
-├── android/                            # Native Android Gradle configuration
-├── ios/                                # Native iOS Xcode configuration
-├── web/                                # Flutter Web engine configuration
-├── windows/                            # Windows Desktop configuration
-├── assets/
-│   ├── icons/                          # SVG and vector iconography
-│   └── images/                         # Static artwork and image assets
-├── docs/                               # Deep architectural and deployment guides
-│   ├── api.md                          # REST API specification & endpoints
-│   ├── architecture.md                 # Complete system architecture documentation
-│   ├── deployment.md                   # App release & cloud deployment guide
-│   ├── flutter.md                      # Flutter environment & setup guide
-│   └── security.md                     # Security protocols & token lifecycle
-├── lib/
-│   ├── main.dart                       # App entrypoint initializing ProviderScope
-│   ├── app/
-│   │   ├── app.dart                    # NirbhayaApp root widget & theme wiring
-│   │   ├── config.dart                 # Dynamic environment endpoints & config
-│   │   ├── router.dart                 # Declarative GoRouter navigation tree
-│   │   └── theme.dart                  # Material 3 color palettes and typography
-│   ├── core/                           # Shared core services & utilities
-│   │   ├── connectivity/               # Network reachability monitor
-│   │   ├── errors/                     # App-wide typed exceptions
-│   │   ├── network/                    # Dio client with JWT interceptors
-│   │   ├── platform/                   # OS and hardware capability detection
-│   │   ├── storage/                    # SecureStorage & LocalStorage wrappers
-│   │   └── utils/                      # Formatting, math, and date helpers
-│   ├── features/                       # 16 Self-contained feature modules
-│   │   ├── ai_assistant/               # AI safety advice assistant
-│   │   ├── auth/                       # Authentication, registration, OTP, JWT
-│   │   ├── contacts/                   # Emergency contacts management & direct dial
-│   │   ├── dashboard/                  # Safety metrics & activity charts
-│   │   ├── fake_call/                  # Simulated incoming call escape tool
-│   │   ├── home/                       # Central dashboard & emergency triggers
-│   │   ├── incidents/                  # Incident reporting with GPS & media tags
-│   │   ├── location/                   # Geolocator stream & GPS tracking
-│   │   ├── maps/                       # Safety map & live POI discovery
-│   │   ├── notifications/              # Alerts & notification feed
-│   │   ├── profile/                    # Personal, medical, and emergency profile
-│   │   ├── resources/                  # Emergency helplines & safety guidelines
-│   │   ├── settings/                   # App preferences, cache, and permissions
-│   │   ├── sos/                        # Emergency activation & active SOS state
-│   │   ├── tracking/                   # Real-time journey sharing
-│   │   └── uploads/                    # Secure media upload handling
-│   └── shared/                         # Reusable widgets and data models
-├── pubspec.yaml                        # Flutter package dependencies
-├── .env.example                        # Template for environment configuration
-└── .gitignore                          # Git ignore definitions
+    State --> Data
+    Data --> Hardware
+    Data --> Cloud
 ```
 
 ---
@@ -184,87 +113,82 @@ nirbhaya/
 ## 🚀 Quick Start Guide
 
 ### 1. Prerequisites
-- **Flutter SDK**: `^3.5.0` or higher ([Installation Guide](https://flutter.dev/docs/get-started/install))
-- **Dart SDK**: `^3.5.0` (bundled with Flutter)
-- **Android Studio / VS Code**: With Flutter and Dart plugins installed
-- **Android Emulator / Device**: Pixel 7 (API 34 or 35 recommended)
+- **Flutter SDK**: `^3.24.0` or higher ([Install Flutter](https://docs.flutter.dev/get-started/install))
+- **Dart SDK**: `^3.5.0`
+- **Android Studio / VS Code** with Flutter and Dart extensions
+- **Android Device / Emulator** (API 26+ / Android 8.0+)
 
-Verify your environment readiness:
+Verify your environment:
 ```bash
 flutter doctor -v
 ```
 
-### 2. Clone and Setup Dependencies
+### 2. Clone and Install Dependencies
 ```bash
-# Clone the repository
-git clone https://github.com/codedbyamankanojiya/nirbhaya.git
-cd nirbhaya
+git clone https://github.com/codedbyamankanojiya/Nirbhaya.git
+cd Nirbhaya
 
-# Install Dart & Flutter packages
+# Install Flutter dependencies
 flutter pub get
 ```
 
-### 3. Run Code Generation (Optional)
-If modifying models or serialization contracts:
+### 3. Setup Local Configuration
+Copy the template configuration:
 ```bash
-dart run build_runner build --delete-conflicting-outputs
-```
-
-### 4. Running the Application
-
-#### Run on Android Emulator (e.g. Pixel 7)
-```bash
-# Launch your AVD emulator
-flutter emulators --launch Pixel_7
-
-# Start the application
-flutter run -d emulator-5554
-```
-
-#### Run on Connected Physical Android Device
-```bash
-flutter run -d <device_id>
-```
-
-#### Run on Web
-```bash
-flutter run -d chrome
-```
-
-#### Run on Windows Desktop
-```bash
-flutter run -d windows
+cp .env.example .env
 ```
 
 ---
 
-## ⚙️ Environment Configuration
+## ⚙️ Firebase & Gemini AI Configuration
 
-Configuration is dynamically managed in `lib/app/config.dart`. Different targets route network requests appropriately:
+### A. Firebase Cloud Setup (Optional for Cloud Sync)
+The app is designed with an **offline-first fallback engine**. Cloud database sync is optional:
+1. Register your Android app on [Firebase Console](https://console.firebase.google.com/) with package name:
+   ```text
+   com.nirbhaya.nirbhaya
+   ```
+2. Enable **Firestore Database** and **Authentication** (Email/Password & Anonymous).
+3. Download `google-services.json` and place it in:
+   ```text
+   android/app/google-services.json
+   ```
+4. Or configure automatically via FlutterFire:
+   ```bash
+   dart pub global activate flutterfire_cli
+   flutterfire configure
+   ```
 
-| Target Environment | Host Address | Purpose |
-| :--- | :--- | :--- |
-| **Android Emulator** | `http://10.0.2.2:3000` | Routes from Android emulator loopback to your development host machine |
-| **Physical Device (Wi-Fi)** | `http://<YOUR_LAN_IP>:3000` | Direct local network connection (e.g. `http://192.168.1.15:3000`) |
-| **Web / Desktop / iOS** | `http://localhost:3000` | Direct localhost loopback |
-| **Production Cloud** | `https://api.nirbhaya.com` | Production TLS API gateway |
+### B. Google Gemini AI Key
+1. Get a free API key from [Google AI Studio](https://aistudio.google.com/).
+2. You can configure it in three ways:
+   - **In-App (Instant)**: Open app $\rightarrow$ **Settings** $\rightarrow$ **Google Gemini AI Key** $\rightarrow$ Paste key and save.
+   - **Launch Flag**: Run with `--dart-define=GEMINI_API_KEY=your_key`.
+   - **Local `.env`**: Add `GEMINI_API_KEY="your_key"` to your local `.env` file.
 
-You can override runtime configuration via `--dart-define`:
-```bash
-flutter run -d emulator-5554 --dart-define=API_BASE_URL=http://10.0.2.2:3000
-```
+---
+
+## 🔒 Security & Zero-Leak Policy
+
+To prevent accidental leaks of sensitive personal information or API credentials when pushed to public GitHub repositories:
+
+1. **Strict `.gitignore`**: All `.env`, `google-services.json`, `GoogleService-Info.plist`, `firebase_options.dart`, `*.keystore`, and `key.properties` are strictly excluded from version control.
+2. **Zero Hardcoded Secrets**: No API keys or tokens exist in plain text inside the tracked Dart codebase.
+3. **Hardware Keystore Storage**: All authentication tokens and safety PINs are encrypted using hardware-backed **AES-256 GCM** in the Android Keystore.
+4. **Sandboxed Media**: Evidence recordings are saved in private sandboxed application storage.
+
+For detailed security policies, vulnerability reporting, and encryption standards, please see **[SECURITY.md](docs/SECURITY.md)**.
 
 ---
 
 ## 🧪 Testing & Code Quality
 
-### Run Unit and Widget Tests
+Run the test suite:
 ```bash
+# Run unit & state machine tests
 flutter test
-```
 
-### Run Static Analysis
-```bash
+# Run static analysis
 flutter analyze
 ```
 
@@ -272,39 +196,45 @@ flutter analyze
 
 ## 📦 Building for Production
 
-### Android Release APK (Split per ABI)
+### Android Release APK
 ```bash
 flutter build apk --release --split-per-abi
 ```
-Generated APKs will be located at `build/app/outputs/flutter-apk/`.
+Outputs: `build/app/outputs/flutter-apk/app-arm64-v8a-release.apk`
 
 ### Google Play App Bundle (AAB)
 ```bash
 flutter build appbundle --release
 ```
-Generated bundle will be located at `build/app/outputs/bundle/release/app-release.aab`.
-
-### Web Production Build
-```bash
-flutter build web --release --web-renderer canvaskit
-```
-Production artifacts will be generated in `build/web/`.
+Outputs: `build/app/outputs/bundle/release/app-release.aab`
 
 ---
 
-## 📚 Comprehensive Documentation
+## 🤝 Contributing
 
-Deep-dive documentation for developers, architects, and DevOps engineers is available in the [`docs/`](docs/) directory:
-
-- 🏛️ **[System Architecture](docs/architecture.md)** — Architectural patterns, multi-tier topology, and Riverpod state management.
-- 📡 **[REST API Reference](docs/api.md)** — Comprehensive specification of all NestJS endpoints, request payloads, and JWT flows.
-- 📱 **[Flutter Development Guide](docs/flutter.md)** — In-depth guide covering module creation, routing, and platform handling.
-- 🔒 **[Security Architecture](docs/security.md)** — Hardware Keystore encryption, token rotation, and data protection policies.
-- 🚀 **[Deployment Guide](docs/deployment.md)** — Play Store signing, iOS TestFlight distribution, and containerization instructions.
+Contributions are welcome! Please review:
+- 📜 **[Code of Conduct](docs/CODE_OF_CONDUCT.md)**
+- 🤝 **[Contributing Guidelines](docs/CONTRIBUTING.md)**
+- 🛡️ **[Security Policy](docs/SECURITY.md)**
+- 📖 **[Manual Setup Guide](docs/MANUAL_SETUP_GUIDE.md)**
 
 ---
-Developed By Aman Kanojiya
+
+## 👨‍💻 Sole Creator & Developer
+
+**Nirbhaya** is conceptualized, designed, architected, and developed solely by:
+
+**Aman Kanojiya**  
+*Full Stack & Mobile Engineer — Creator of Nirbhaya*
+
+- 🌐 **Portfolio**: [codedbyamankanojiya.vercel.app](https://codedbyamankanojiya.vercel.app)
+- 🐙 **GitHub**: [@codedbyamankanojiya](https://github.com/codedbyamankanojiya)
+- 💼 **LinkedIn**: [Aman Kanojiya](https://www.linkedin.com/in/aman-kanojiya-7386822b0)
+- 🐦 **Twitter (X)**: [@AKnj08](https://x.com/AKnj08)
+
+---
 
 ## 📄 License
 
-This project is Proprietary and Confidential — see the [LICENSE](LICENSE) file for details.
+Copyright (c) 2026 Aman Kanojiya. All rights reserved.  
+All rights, title, architecture, code, and intellectual property of the Nirbhaya platform belong exclusively to Aman Kanojiya. See the [LICENSE](LICENSE) file for terms.
