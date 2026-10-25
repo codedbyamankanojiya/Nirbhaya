@@ -8,6 +8,7 @@ import 'package:nirbhaya/features/resources/presentation/resources_screen.dart';
 import 'package:nirbhaya/features/profile/presentation/profile_screen.dart';
 import 'package:nirbhaya/features/auth/presentation/login_screen.dart';
 import 'package:nirbhaya/features/auth/presentation/register_screen.dart';
+import 'package:nirbhaya/features/auth/presentation/forgot_password_screen.dart';
 import 'package:nirbhaya/features/contacts/presentation/contacts_screen.dart';
 import 'package:nirbhaya/features/incidents/presentation/incidents_screen.dart';
 import 'package:nirbhaya/features/notifications/presentation/notifications_screen.dart';
@@ -93,6 +94,11 @@ final goRouter = GoRouter(
       path: '/register',
       parentNavigatorKey: _rootNavigatorKey,
       builder: (context, state) => const RegisterScreen(),
+    ),
+    GoRoute(
+      path: '/forgot-password',
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (context, state) => const ForgotPasswordScreen(),
     ),
     GoRoute(
       path: '/contacts',
